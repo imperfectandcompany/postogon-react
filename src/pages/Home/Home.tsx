@@ -107,7 +107,7 @@ export class Home extends React.Component{
                         <div className="flex flex-col-reverse flex-wrap items-center md:flex-row">
                       <div className="flex flex-col items-center justify-center w-full pt-4 pb-6 md:w-2/3 md:pb-0 md:pr-6 md:block md:pt-0">
                                 <h1 className="text-xl font-black leading-tight text-center text-white slide-in-bottom-h1 md:text-2xl lg:text-4xl xl:text-5xl lg:w-10/12 md:text-left">The Freedom to Be Yourself Online</h1>
-                                <Link to="/login"><button className="px-4 py-3 mt-5 text-sm font-bold text-indigo-700 bg-white rounded-lg slide-in-bottom-subtitle lg:mt-12 lg:py-4 lg:px-6 lg:text-lg xl:text-xl hover:opacity-90">Enter the Space</button></Link>
+                                <Link to="/continue"><button className="px-4 py-3 mt-5 text-sm font-bold text-indigo-700 bg-white rounded-lg slide-in-bottom-subtitle lg:mt-12 lg:py-4 lg:px-6 lg:text-lg xl:text-xl hover:opacity-90">Enter the Space</button></Link>
                             </div>
                             <div className="w-full md:w-1/3">
                                 <div className="flex flex-col items-center justify-center fade-in">

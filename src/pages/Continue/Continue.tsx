@@ -6,47 +6,55 @@ export interface LoginState {
     username?: string,
     password?: string,
     loading?: boolean,
-    result?: string
+    result?: string,
 }
 
-
 export class Continue extends React.Component<{}, LoginState>{
+  //set username and password to empty by default. We set loading as false since we aren't processing anything immediately.
     constructor(props:string) {
         super(props);
         this.state = {
             username: '',
             password: '',
-            loading: false,
+            loading: false,   
           };
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
       }
-    
+    //we call this function everytime and input is changed to update the state. In this case, we are updating username and password
         handleInputChange(event:React.ChangeEvent<HTMLInputElement>) {
             const name = event.target.name;
             this.setState({[name]: event.target.value});
           }
-        
-    
       handleSubmit(event:React.FormEvent<HTMLFormElement>) {
-          this.setState({
-              loading: true
-          })
+        this.setState({
+          loading: true,
+          result: ''
+      })   
         axios.post('https://api.postogon.com/auth',{
             username: this.state.username,
             password: this.state.password,
         })
         .then( (response) =>  {
-            this.setState({
-                loading: false,
-                result: JSON.stringify(response.data)
-            })            
+          this.setState({
+            loading: false,
+            result: JSON.stringify(response.data)
+        }) 
         })
-        .catch( (response) => {
+        .catch( (error) => {
+          if (error.response) {
             this.setState({
-                loading: false,
-                result: JSON.stringify(response.data)
-            })               
+              loading: false,
+              result: error.response.data,
+          })             
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+          }
+      
         });
         event.preventDefault();
       }
@@ -54,11 +62,8 @@ export class Continue extends React.Component<{}, LoginState>{
     render(){
         return(<div className="max-w-md p-8 mx-auto bg-white rounded md:p-12 md:my-10 lg:shadow-2xl md:shadow-lg sm:shadow-sm">
             <form className="flex flex-col" onSubmit={this.handleSubmit.bind(this)}>
-
-
-
   <div className="mb-4">
-    <label className="block mb-2 font-light text-md" htmlFor="email1">Email Or Username</label>
+    <label className="block mb-2 font-light text-md" htmlFor="username">Email Or Username</label>
     <input type="text" name="username" id="username" disabled={this.state.loading}  value={this.state.username} onChange={this.handleInputChange} autoComplete="off" className="w-full p-4 font-light leading-tight border border-gray-500 appearance-none bg-drabya-gray focus:outline-none focus:shadow-outline"/>
   </div>
   <div className="mb-4">
@@ -70,7 +75,7 @@ export class Continue extends React.Component<{}, LoginState>{
       Forgot Password?
     </div>      
     <motion.button whileHover={{ scale: 0.98 }} disabled={this.state.loading} whileTap={{ scale: 0.9 }} transition={{ duration: 0.5 }} type="submit" className="flex-initial px-6 py-2 font-semibold text-white bg-indigo-600 rounded justify-items-start hover:bg-indigo-700 focus:outline-none focus:shadow-outline">
-      {this.state.loading ? 'Loading...' : 'Continue'}
+      {this.state.loading ? 'Loading' : 'Continue'}
     </motion.button>
   </div>
             </form>
