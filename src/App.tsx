@@ -3,16 +3,21 @@ import Continue from "./pages/Continue/Continue";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
+import HomeIn from "./pages/LoggedIn/Home/Home";
 import Start from "./pages/Start/Start";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import React, { useLayoutEffect } from "react";
+import NavbarIn from "./components/Navbar/NavbarIn";
 
 const getCookieValue = (name: string) =>
   document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || "";
 
 function App() {
-  const [isLoggedIn, updateLoggedIn] = useState(false);
 
+  useLayoutEffect(checkSession);
+
+  const [isLoggedIn, updateLoggedIn] = useState(false);
   function checkSession() {
     var matchCookieOne = getCookieValue("POSTOGONID");
     var matchCookieTwo = getCookieValue("POSTOGONID_");
@@ -99,28 +104,38 @@ function App() {
     }
   }
 
+//save isAuthenticated as true in localStorage,
+if(isLoggedIn === true){
+  localStorage.setItem("isAuthenticated", "true");
+}
+
+  const [showRoutes, setRoutes] = useState(false);
+
+  //exclude router until it retrieves layout effects from server-rendered-html
   useEffect(() => {
-    checkSession();
-    console.log(isLoggedIn);
-  }, [isLoggedIn]); // <-- empty dependency array
+    checkSession();    
+    setRoutes(true);
+  }, []);
 
   return (
-    <Router>
-      <div>
-        {<Navbar></Navbar>}
-        <Switch>
-          <Route path="/start">
-            <Start></Start>
-          </Route>
-          <Route path="/continue">
-            <Continue />
-          </Route>
-          <Route path="/">
-            <Home></Home>
-          </Route>
-        </Switch>
-      </div>
-    </Router>
+    <div>
+      {showRoutes ? (
+        <Router>
+              {isLoggedIn ? <NavbarIn></NavbarIn> : <Navbar></Navbar>}
+          <Switch>
+            <Route path="/start">
+              <Start></Start>
+            </Route>
+            <Route path="/continue">
+              <Continue />
+            </Route>
+            <Route path="/">
+              {isLoggedIn ? <HomeIn></HomeIn> : <Home></Home>}
+            </Route>
+          </Switch>
+        </Router>
+      ) : null}
+    </div>
   );
 }
 
