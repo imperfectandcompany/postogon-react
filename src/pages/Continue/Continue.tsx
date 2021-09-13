@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { PostData } from "../../services/PostData";
 
 export interface LoginState {
   username?: string;
@@ -11,6 +12,7 @@ export interface LoginState {
 }
 
 export class Continue extends React.Component<{}, LoginState> {
+  
   //set username and password to empty by default. We set loading as false since we aren't processing anything immediately.
   constructor(props: string) {
     super(props);
@@ -20,15 +22,19 @@ export class Continue extends React.Component<{}, LoginState> {
       success: false,
       loading: false,
     };
+    this.login = this.login.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+
+
   //we call this function everytime and input is changed to update the state. In this case, we are updating username and password
-  handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const name = event.target.name;
-    this.setState({ [name]: event.target.value });
+  handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ [e.target.name]: e.target.value });
   }
-  handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  
+  async handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     this.setState({
       loading: true,
       result: "",
@@ -61,6 +67,8 @@ export class Continue extends React.Component<{}, LoginState> {
       });
     event.preventDefault();
   }
+
+  
   //store login token inside clients browser as a cookie
   setToken(data: object) {
     if (data && this.state.success) {
@@ -73,10 +81,21 @@ export class Continue extends React.Component<{}, LoginState> {
     }
   }
 
+  login() {
+    if(this.state.username && this.state.password){
+      PostData('auth',this.state).then((result) => {
+       let responseJson:any = result;
+console.log(responseJson);
+       
+      });
+    }
+    
+   }
+
   render() {
     return (
       <div className="max-w-md p-8 mx-auto bg-white rounded md:p-12 md:my-10 lg:shadow-2xl md:shadow-lg sm:shadow-sm">
-        <form className="flex flex-col" onSubmit={this.handleSubmit.bind(this)}>
+        <form className="flex flex-col" onSubmit={this.login.bind(this)}>
           <div className="mb-4">
             <label className="block mb-2 font-light text-md" htmlFor="username">
               Email Or Username

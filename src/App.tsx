@@ -6,21 +6,25 @@ import Home from "./pages/Home/Home";
 import HomeIn from "./pages/LoggedIn/Home/Home";
 import Start from "./pages/Start/Start";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import React, { useLayoutEffect } from "react";
-import NavbarIn from "./components/Navbar/NavbarIn";
+import Routes from './routes';
 
+import { useEffect, useLayoutEffect, useState } from "react";
+import React from "react";
+import NavbarIn from "./components/Navbar/NavbarIn";
+import Loading from "./components/Loading/Loading";
+
+//lets us grab the exact value of the cookie
 const getCookieValue = (name: string) =>
   document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || "";
 
 function App() {
 
-  useLayoutEffect(checkSession);
-
   const [isLoggedIn, updateLoggedIn] = useState(false);
-  function checkSession() {
+
+  async function checkSession() {
     var matchCookieOne = getCookieValue("POSTOGONID");
     var matchCookieTwo = getCookieValue("POSTOGONID_");
+    //if both cookies exist, then check the value for POSTOGONID in the backend
     if (matchCookieOne && matchCookieTwo) {
       axios
         .get("https://api.postogon.com/auth", {
@@ -28,10 +32,10 @@ function App() {
             token: matchCookieOne,
           },
         })
-        .then(function (response) {
-          updateLoggedIn(true);
+        .then(await function (response) {
+         updateLoggedIn(true);
         })
-        .catch(function (error) {
+        .catch(await function (error) {
           console.log(matchCookieOne);
           console.log(error);
         });
@@ -46,7 +50,7 @@ function App() {
             token: matchCookieOne,
           },
         })
-        .then(function (response) {
+        .then(await function (response) {
           //create new token with existing userid
           axios
             .post(
@@ -102,39 +106,29 @@ function App() {
           console.log(error);
         });
     }
+    await setLoading(false);
   }
 
-//save isAuthenticated as true in localStorage,
-if(isLoggedIn === true){
-  localStorage.setItem("isAuthenticated", "true");
-}
-
-  const [showRoutes, setRoutes] = useState(false);
 
   //exclude router until it retrieves layout effects from server-rendered-html
-  useEffect(() => {
+  useLayoutEffect(() => {
     checkSession();    
-    setRoutes(true);
-  }, []);
+  }, [isLoggedIn]);
+
+  useLayoutEffect(() => {
+    checkSession();    
+  }, [isLoggedIn]);
+
+
+  const [loading, setLoading] = useState(true)
+
+  if (loading) return <Loading></Loading>;
 
   return (
     <div>
-      {showRoutes ? (
-        <Router>
-              {isLoggedIn ? <NavbarIn></NavbarIn> : <Navbar></Navbar>}
-          <Switch>
-            <Route path="/start">
-              <Start></Start>
-            </Route>
-            <Route path="/continue">
-              <Continue />
-            </Route>
-            <Route path="/">
-              {isLoggedIn ? <HomeIn></HomeIn> : <Home></Home>}
-            </Route>
-          </Switch>
-        </Router>
-      ) : null}
+      { 
+          <Routes/>
+       }
     </div>
   );
 }
