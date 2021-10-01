@@ -7,6 +7,7 @@ import Home from './components/Home';
 import { getToken, removeLoginSession, setLoginDetails } from './Utils/Common';
 import PrivateRoute from './Utils/PrivateRoute';
 import PublicRoute from './Utils/PublicRoute';
+import Join from './components/Home/Join';
 
 
  

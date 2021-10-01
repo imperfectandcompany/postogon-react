@@ -1,8 +1,6 @@
 
-import { Redirect, Route } from 'react-router';
 import { NavLink } from 'react-router-dom';
-import Login from './Login';
-import Navbar from './Navbar';
+
 
  
 function Home() {

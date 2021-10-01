@@ -36,6 +36,7 @@ function Login(props: { history: string[]; }) {
             </label>
             <input
               type="text"
+              id="email"
               {...username} autoComplete="new-password"
               className="w-full p-4 font-light leading-tight border border-gray-500 appearance-none bg-drabya-gray focus:outline-none focus:shadow-outline"
             />
@@ -46,6 +47,7 @@ function Login(props: { history: string[]; }) {
             </label>
             <input
               type="password"
+              id="password"
               {...password} autoComplete="new-password" 
               className="w-full p-4 font-light leading-tight border border-gray-500 appearance-none bg-drabya-gray focus:outline-none focus:shadow-outline"
             />
