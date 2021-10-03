@@ -1,13 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Loading from './components/Loading/Loading';
-import Dashboard from './components/Dashboard';
 import Home from './components/Home';
 import { getToken, removeLoginSession, setLoginDetails } from './Utils/Common';
 import PrivateRoute from './Utils/PrivateRoute';
 import PublicRoute from './Utils/PublicRoute';
-import Join from './components/Home/Join';
+import Logout from './components/Logout';
+import Dashboardnew from './components/Home/dashboardnew';
+import Dashboard from './components/Dashboard';
 
 
  
@@ -38,9 +39,14 @@ function App() {
             <Switch>
             <PublicRoute exact path="/" component={Home} />
             <PrivateRoute path="/home" component={Dashboard} />
+            <PrivateRoute exact path="/search" component={Dashboard} />
+            <PrivateRoute exact path="/profile" component={Dashboard} />
             <PublicRoute path="/login" component={Home} />
+            <PublicRoute path="/homenew" component={Dashboardnew} />
             <PublicRoute path="/join" component={Home} />
-
+    <PrivateRoute path="/logout">
+      {Logout}
+    </PrivateRoute>
             </Switch>
       </BrowserRouter>
   );

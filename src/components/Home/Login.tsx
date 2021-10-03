@@ -55,7 +55,7 @@ function Login(props: { history: string[]; }) {
           <div className="flex items-center justify-between mb-5">
             <Link to="/continue">
               <div className="inline-block text-sm font-light text-indigo-600 align-baseline hover:text-indigo-500">
-                Already have an account?
+                Forgot password
               </div>
             </Link>
             <motion.button

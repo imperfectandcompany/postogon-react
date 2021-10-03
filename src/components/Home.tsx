@@ -1,5 +1,4 @@
-
-import { Redirect, Route } from 'react-router';
+import { Route } from 'react-router';
 import Login from './Home/Login';
 import Navbar from './Home/Navbar';
 import Main from './Home/Main';

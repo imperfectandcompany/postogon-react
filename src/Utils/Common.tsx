@@ -71,6 +71,10 @@ export const getUid = () => {
     sessionStorage.removeItem('email');
     console.log('Removed user data from session storage');
   }
+
+
+  
+
    
   // set the token and user from the session storage
   export const setUserToken = (token: object) => {
