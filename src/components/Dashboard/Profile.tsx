@@ -169,11 +169,12 @@ function Profile () {
             <dl className="">
 
                     {currentTab === 'Posts' ? 
-                                            <nav className="relative  shadow flex " aria-label="Tabs">
+                                            <nav className="relative z-10 shadow flex " aria-label="Tabs">
                                             <button onClick={() => setFeed("public")}
                                             className={currentFeed == "public" ? "border-yellow-400 border-b rounded-b-none text-gray-500 hover:text-gray-700  rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10" : "text-gray-500 hover:text-gray-700 rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10"}>
                                             <span>Public</span>
-                                          </button>{isaContact ?                                           <button onClick={() => setFeed("private")}
+                                          </button>
+                                          {isaContact ?                                           <button onClick={() => setFeed("private")}
                                             className={currentFeed == "private" ? "border-yellow-400 border-b rounded-b-none text-gray-500 hover:text-gray-700  rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10" : "text-gray-500 hover:text-gray-700 rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10"}>
                                             <span>Private</span>
                                           </button>: null}

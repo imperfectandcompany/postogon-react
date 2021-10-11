@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { NavLink } from 'react-router-dom';
+import { NodeBuilderFlags } from 'typescript';
 import { getToken } from '../../Utils/Common';
 import Post from '../Dashboard/Post';
+import Loading from '../Loading/Loading';
 
 interface PostProps {
    feed: string;
@@ -14,10 +17,10 @@ function Posts(props:PostProps){
 
 
    const [loading, setLoading] = useState(true);
-
-
    const [posts, setData] = useState([]);
-
+   const [allPosts, setAllPosts] = useState([]);
+   const perPage = 8;
+   const [lastPosition, setLastPosition] = useState(perPage);
 
    useEffect(() => {
       const getData = async () => {
@@ -26,17 +29,20 @@ function Posts(props:PostProps){
             const response = await fetch(`https://api.postogon.com/posts/public?token=${token}&feed=${props.feed}`);
             const newData = await response.json();
             setData(newData);
+            setAllPosts(newData.slice(0, perPage));            
             setLoading(false);         
          } else if(props.type == "profile") {
             const response = await fetch(`https://api.postogon.com/profile?username=${props.username}&feed=${props.feed}`);
             const newData = await response.json();
             setData(newData);
+            setAllPosts(newData.slice(0, perPage));            
             setLoading(false);    
          }
          else if(props.type == "id") {
             const response = await fetch(`https://api.postogon.com/posts?id=${props.id}`);
             const newData = await response.json();
             setData(newData);
+            setAllPosts(newData.slice(0, perPage));            
             setLoading(false);    
          }         
       };
@@ -44,131 +50,118 @@ function Posts(props:PostProps){
     }, [props.feed]);
 
 
+    const refreshData = async () =>{
+      const token = getToken();
+      setLoading(true);       
+      if(props.type == "timeline"){
+         const response = await fetch(`https://api.postogon.com/posts/public?token=${token}&feed=${props.feed}`);
+         const newData = await response.json();
+         setData(newData);
+         setAllPosts(newData.slice(0, perPage));            
+         setLoading(false);         
+      } else if(props.type == "profile") {
+         const response = await fetch(`https://api.postogon.com/profile?username=${props.username}&feed=${props.feed}`);
+         const newData = await response.json();
+         setData(newData);
+         setAllPosts(newData.slice(0, perPage));            
+         setLoading(false);    
+      }
+      else if(props.type == "id") {
+         const response = await fetch(`https://api.postogon.com/posts?id=${props.id}`);
+         const newData = await response.json();
+         setData(newData);
+         setAllPosts(newData.slice(0, perPage));            
+         setLoading(false);    
+      }   
+    }
 
-
-if(loading && !props.id){
-   const n = 8;
-
-   return(
-   <div>
-   <ul className="space-y-4">
-{[...Array(n)].map((object, i) => (
-      <li key={i} className="bg-white px-4 py-6 shadow sm:p-6 sm:rounded-lg">
-            <div>
-               <div className="flex space-x-3">
-                  <div className="flex-shrink-0">
-                  <div className="animate-pulse rounded-full bg-gray-300 h-10 w-10"></div>
-                  </div>
-                              <div className="min-w-0 flex-1 space-y-1">
-                     <div className="animate-pulse h-4 bg-gray-200 rounded w-2/5"></div>
-                     <div className="animate-pulse h-3 bg-gray-200 rounded w-2/5"></div>
-                  </div>
-                  <div className="flex-shrink-0 self-center flex">
-                     <div className="relative inline-block text-left">
-                        <div>
-                        <div className="animate-pulse bg-gray-200 w-6 h-6"></div>
+  //load more posts
+    const loadPosts = () => {
+      setTimeout(() => {
+        setAllPosts((prev) => [
+          ...prev,
+          ...posts.slice(lastPosition, lastPosition + perPage),
+        ]);
+      }, 200);
+      setLastPosition(lastPosition + perPage);
+    };
+    
+    //function to load skeleton posts
+    function loadSkeletonPosts(n:number){
+      return(
+      <div>
+      <ul className="space-y-4">
+   {[...Array(n)].map((object, i) => (
+         <li key={i} className="bg-white px-4 py-6 shadow sm:p-6 sm:rounded-lg">
+               <div>
+                  <div className="flex space-x-3">
+                     <div className="flex-shrink-0">
+                     <div className="animate-pulse rounded-full bg-gray-300 h-10 w-10"></div>
+                     </div>
+                                 <div className="min-w-0 flex-1 space-y-1">
+                        <div className="animate-pulse h-4 bg-gray-200 rounded w-2/5"></div>
+                        <div className="animate-pulse h-3 bg-gray-200 rounded w-2/5"></div>
+                     </div>
+                     <div className="flex-shrink-0 self-center flex">
+                        <div className="relative inline-block text-left">
+                           <div>
+                           <div className="animate-pulse bg-gray-200 w-6 h-6"></div>
+                           </div>
                         </div>
                      </div>
                   </div>
                </div>
-            </div>
-            <div className="mt-6 space-y-2">
-
-        <div className="h-4 bg-gray-200 rounded"></div>
-        <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-            </div>
-            <div className="mt-6 flex justify-between space-x-8">
-               <div className="flex space-x-6">
-                  <span className="inline-flex items-center text-sm">
-                  <div className="inline-flex space-x-2">
-                        <div className="animate-pulse bg-gray-200 w-10 h-4"></div>
-                        <span className="animate-pulse bg-gray-200 w-8 h-4"></span><span className="sr-only">Likes</span>
-                     </div>
-                  </span>
+               <div className="mt-6 space-y-2">
+   
+           <div className="h-4 bg-gray-200 rounded"></div>
+           <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+               </div>
+               <div className="mt-6 flex justify-between space-x-8">
+                  <div className="flex space-x-6">
+                     <span className="inline-flex items-center text-sm">
+                     <div className="inline-flex space-x-2">
+                           <div className="animate-pulse bg-gray-200 w-10 h-4"></div>
+                           <span className="animate-pulse bg-gray-200 w-8 h-4"></span><span className="sr-only">Likes</span>
+                        </div>
+                     </span>
+                     <span className="inline-flex items-center text-sm">
+                        <div className="inline-flex space-x-2">
+                           <div className="animate-pulse bg-gray-200 w-10 h-4"></div>
+                           <span className="animate-pulse bg-gray-200 w-8 h-4"></span><span className="sr-only">Comments</span>
+                        </div>
+                     </span>
+                  </div>
+                  <div className="flex text-sm">
                   <span className="inline-flex items-center text-sm">
                      <div className="inline-flex space-x-2">
-                        <div className="animate-pulse bg-gray-200 w-10 h-4"></div>
-                        <span className="animate-pulse bg-gray-200 w-8 h-4"></span><span className="sr-only">Comments</span>
-                     </div>
-                  </span>
+                           <div className="animate-pulse bg-gray-200 w-10 h-4"></div>
+                        </div>
+                     </span>
+                  </div>
                </div>
-               <div className="flex text-sm">
-               <span className="inline-flex items-center text-sm">
-                  <div className="inline-flex space-x-2">
-                        <div className="animate-pulse bg-gray-200 w-10 h-4"></div>
-                     </div>
-                  </span>
-               </div>
-            </div>
-      </li>
-))}
-      </ul>
-   </div>      
-   )   
+         </li>
+   ))}
+         </ul>
+      </div>      
+      )   
+   }
+
+
+
+//if loading is true and post type is not id
+if(loading && !props.id){
+   loadSkeletonPosts(8);  
 }
 
+//if loading is true and post type is id
 if(loading && props.id){
-   const n = 1;
-
-   return(
-   <div>
-   <ul className="space-y-4">
-{[...Array(n)].map((object, i) => (
-      <li key={i} className="bg-white px-4 py-6 shadow sm:p-6 sm:rounded-lg">
-            <div>
-               <div className="flex space-x-3">
-                  <div className="flex-shrink-0">
-                  <div className="animate-pulse rounded-full bg-gray-300 h-10 w-10"></div>
-                  </div>
-                              <div className="min-w-0 flex-1 space-y-1">
-                     <div className="animate-pulse h-4 bg-gray-200 rounded w-2/5"></div>
-                     <div className="animate-pulse h-3 bg-gray-200 rounded w-2/5"></div>
-                  </div>
-                  <div className="flex-shrink-0 self-center flex">
-                     <div className="relative inline-block text-left">
-                        <div>
-                        <div className="animate-pulse bg-gray-200 w-6 h-6"></div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            <div className="mt-6 space-y-2">
-
-        <div className="h-4 bg-gray-200 rounded"></div>
-        <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-            </div>
-            <div className="mt-6 flex justify-between space-x-8">
-               <div className="flex space-x-6">
-                  <span className="inline-flex items-center text-sm">
-                  <div className="inline-flex space-x-2">
-                        <div className="animate-pulse bg-gray-200 w-10 h-4"></div>
-                        <span className="animate-pulse bg-gray-200 w-8 h-4"></span><span className="sr-only">Likes</span>
-                     </div>
-                  </span>
-                  <span className="inline-flex items-center text-sm">
-                     <div className="inline-flex space-x-2">
-                        <div className="animate-pulse bg-gray-200 w-10 h-4"></div>
-                        <span className="animate-pulse bg-gray-200 w-8 h-4"></span><span className="sr-only">Comments</span>
-                     </div>
-                  </span>
-               </div>
-               <div className="flex text-sm">
-               <span className="inline-flex items-center text-sm">
-                  <div className="inline-flex space-x-2">
-                        <div className="animate-pulse bg-gray-200 w-10 h-4"></div>
-                     </div>
-                  </span>
-               </div>
-            </div>
-      </li>
-))}
-      </ul>
-   </div>      
-   )   
+   loadSkeletonPosts(1);  
 }  
 
 
+
+
+//load posts with infinite scrolling
 function RenderPosts(){
 
    interface iPosts {
@@ -181,7 +174,30 @@ function RenderPosts(){
 
    return(
       <div>
-      {posts && posts.length > 0 && !loading ? posts.map((post:iPosts)=>
+<InfiniteScroll
+dataLength={allPosts.length}
+next={loadPosts}
+  // below props only if you need pull down functionality
+  refreshFunction={refreshData}
+  pullDownToRefresh
+  pullDownToRefreshThreshold={50}
+  pullDownToRefreshContent={
+<div className="z-0 m-4 flex mx-auto w-8 h-8 border-4 border-dashed rounded-full animate-pulse dark:border-violet-400"></div>
+
+
+  }
+  releaseToRefreshContent={
+<div className="z-0 m-4 flex mx-auto w-8 h-8 border-4 border-dashed rounded-full animate-spin dark:border-violet-400"></div>
+
+
+  }
+hasMore={lastPosition < posts.length}
+loader={loadSkeletonPosts(8)}
+endMessage={<div></div>}
+>
+
+
+      {posts && posts.length > 0 && !loading ? allPosts.map((post:iPosts)=>
             <li key={post.PostId} className="bg-white px-4 py-6 shadow sm:p-6 sm:rounded-lg">
                   <div>
                      <div className="flex space-x-3">
@@ -243,6 +259,7 @@ function RenderPosts(){
                   </div>
             </li>
       ): null}
+</InfiniteScroll>      
       </div>
    )
 
