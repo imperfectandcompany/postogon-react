@@ -42,6 +42,7 @@ function App() {
             <PrivateRoute exact path="/search" component={Dashboard} />
             <PrivateRoute exact path="/profile/" component={Dashboard} />
             <Route exact path="/profile/:username" component={Dashboard} />
+            <Route exact path="/post/:id" component={Dashboard} />
             <PublicRoute path="/login" component={Home} />
             <PublicRoute path="/join" component={Home} />
     <PrivateRoute path="/logout">

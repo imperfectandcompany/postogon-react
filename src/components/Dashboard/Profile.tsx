@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import Post from '../Feed/Post';
-import { getUser } from '../../Utils/Common';
+import Posts from '../Feed/Posts';
+import { getToken, getUser } from '../../Utils/Common';
 import { useParams } from 'react-router';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
@@ -27,28 +27,41 @@ function Profile () {
 
     const [currentTab, setTab] = React.useState('Posts')
     const { username }= useParams<ProfileParams>();
-    const [loading, setUserLoaading] = useState(true);
+    const [loading, setUserLoading] = useState(true);
     const [validUser, setValidUser] = useState(false);
+    const [currentFeed, setFeed] = useState("public");
+
+    const [isaContact, setContact] = useState(false);
 
     useEffect(() => {
         axios.get(`https://api.postogon.com/user?username=${username}`).then(response => {
             setValidUser(true);
-            setUserLoaading(false);            
+            const token = getToken();
+            axios.get(`https://api.postogon.com/user?contact=${username}&token=${token}`).then(response => {
+              setContact(true);
+            }).catch(error => {
+              setContact(false);
+            })
+            setUserLoading(false);    
+            console.log(isaContact);
             console.log("Valid profile loaded");
         }).catch(error => {
             setValidUser(false);
-            setUserLoaading(false);
+            setUserLoading(false);
             console.log("Error! Profile does not exist.");
         });
       }, []);
+
+
 
       if (!validUser && loading) {
         return <div className="content"><Loading></Loading></div>
       }
 
-      function loadPosts(feed:string){
+      function LoadPosts(){
         return(
-            <Post feed={feed} username={username} type="profile"></Post>
+            <div>
+            <Posts feed={currentFeed} username={username} type="profile"></Posts></div>
         )
     }      
 
@@ -154,7 +167,20 @@ function Profile () {
           </div>
           <div className="mt-6 max-w-5xl mx-auto sm:px-6 lg:px-8">
             <dl className="">
-            {currentTab === 'Posts' ? loadPosts("public") : null}
+
+                    {currentTab === 'Posts' ? 
+                                            <nav className="relative  shadow flex " aria-label="Tabs">
+                                            <button onClick={() => setFeed("public")}
+                                            className={currentFeed == "public" ? "border-yellow-400 border-b rounded-b-none text-gray-500 hover:text-gray-700  rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10" : "text-gray-500 hover:text-gray-700 rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10"}>
+                                            <span>Public</span>
+                                          </button>{isaContact ?                                           <button onClick={() => setFeed("private")}
+                                            className={currentFeed == "private" ? "border-yellow-400 border-b rounded-b-none text-gray-500 hover:text-gray-700  rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10" : "text-gray-500 hover:text-gray-700 rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-6 text-sm font-medium text-center hover:bg-gray-50 focus:z-10"}>
+                                            <span>Private</span>
+                                          </button>: null}
+                                      </nav>
+                    :null}
+            {currentTab === 'Posts' ?
+ LoadPosts() : null}
                 {currentTab === 'About' ? loadAbout() : null}
             </dl>
           </div></div>

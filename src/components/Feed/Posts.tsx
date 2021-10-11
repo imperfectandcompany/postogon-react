@@ -1,14 +1,16 @@
 import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { getToken } from '../../Utils/Common';
-import { getPosts, useForceUpdate } from '../../Utils/Timeline';
+import Post from '../Dashboard/Post';
 
 interface PostProps {
    feed: string;
    type: string;
    username?: string;
+   id?: string;
 }
 
-function Post(props:PostProps){
+function Posts(props:PostProps){
 
 
    const [loading, setLoading] = useState(true);
@@ -26,20 +28,25 @@ function Post(props:PostProps){
             setData(newData);
             setLoading(false);         
          } else if(props.type == "profile") {
-            
             const response = await fetch(`https://api.postogon.com/profile?username=${props.username}&feed=${props.feed}`);
             const newData = await response.json();
             setData(newData);
             setLoading(false);    
-                 
          }
+         else if(props.type == "id") {
+            const response = await fetch(`https://api.postogon.com/posts?id=${props.id}`);
+            const newData = await response.json();
+            setData(newData);
+            setLoading(false);    
+         }         
       };
       getData();
     }, [props.feed]);
 
 
 
-if(loading){
+
+if(loading && !props.id){
    const n = 8;
 
    return(
@@ -100,6 +107,67 @@ if(loading){
    )   
 }
 
+if(loading && props.id){
+   const n = 1;
+
+   return(
+   <div>
+   <ul className="space-y-4">
+{[...Array(n)].map((object, i) => (
+      <li key={i} className="bg-white px-4 py-6 shadow sm:p-6 sm:rounded-lg">
+            <div>
+               <div className="flex space-x-3">
+                  <div className="flex-shrink-0">
+                  <div className="animate-pulse rounded-full bg-gray-300 h-10 w-10"></div>
+                  </div>
+                              <div className="min-w-0 flex-1 space-y-1">
+                     <div className="animate-pulse h-4 bg-gray-200 rounded w-2/5"></div>
+                     <div className="animate-pulse h-3 bg-gray-200 rounded w-2/5"></div>
+                  </div>
+                  <div className="flex-shrink-0 self-center flex">
+                     <div className="relative inline-block text-left">
+                        <div>
+                        <div className="animate-pulse bg-gray-200 w-6 h-6"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div className="mt-6 space-y-2">
+
+        <div className="h-4 bg-gray-200 rounded"></div>
+        <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+            </div>
+            <div className="mt-6 flex justify-between space-x-8">
+               <div className="flex space-x-6">
+                  <span className="inline-flex items-center text-sm">
+                  <div className="inline-flex space-x-2">
+                        <div className="animate-pulse bg-gray-200 w-10 h-4"></div>
+                        <span className="animate-pulse bg-gray-200 w-8 h-4"></span><span className="sr-only">Likes</span>
+                     </div>
+                  </span>
+                  <span className="inline-flex items-center text-sm">
+                     <div className="inline-flex space-x-2">
+                        <div className="animate-pulse bg-gray-200 w-10 h-4"></div>
+                        <span className="animate-pulse bg-gray-200 w-8 h-4"></span><span className="sr-only">Comments</span>
+                     </div>
+                  </span>
+               </div>
+               <div className="flex text-sm">
+               <span className="inline-flex items-center text-sm">
+                  <div className="inline-flex space-x-2">
+                        <div className="animate-pulse bg-gray-200 w-10 h-4"></div>
+                     </div>
+                  </span>
+               </div>
+            </div>
+      </li>
+))}
+      </ul>
+   </div>      
+   )   
+}  
+
 
 function RenderPosts(){
 
@@ -108,6 +176,7 @@ function RenderPosts(){
       PostBody: string;
       PostedBy: string;
       Likes: number;
+      To_Whom: number;
   }
 
    return(
@@ -116,13 +185,13 @@ function RenderPosts(){
             <li key={post.PostId} className="bg-white px-4 py-6 shadow sm:p-6 sm:rounded-lg">
                   <div>
                      <div className="flex space-x-3">
-                        <div className="flex-shrink-0">
-                     <div className="w-10 h-10 font-bold text-center transition text-white bg-gray-700 bg-center mr-2 border-4 border-gray-500 rounded-full cursor-pointer select-none hover:opacity-80">
+                     <div className="flex-shrink-0">
+                     <NavLink to={"/profile/"+post.PostedBy}><div className="w-10 h-10 font-bold text-center transition text-white bg-gray-700 bg-center mr-2 border-4 border-gray-500 rounded-full cursor-pointer select-none hover:opacity-80">
                      <div className="my-1">?</div>
                   <span className="flex transition -my-4 mx-5 animate-bounce focus:opacity-50 focus:outline-none select-none"></span>			   
-                  </div></div>
+                  </div></NavLink></div>
                                     <div className="min-w-0 flex-1">
-                           <p className="text-sm font-medium text-gray-900"><a href="#" className="hover:underline">{post.PostedBy}</a></p>
+                           <p className="text-sm font-medium text-gray-900"><NavLink to={"/profile/"+post.PostedBy} className="hover:underline">{post.PostedBy}</NavLink></p>
                            <p className="text-sm text-gray-500"><a href="#" className="hover:underline"><time dateTime="2020-12-09T11:43:00">--</time></a></p>
                         </div>
                         <div className="flex-shrink-0 self-center flex">
@@ -190,4 +259,4 @@ function RenderPosts(){
     );
 }
 
-export default Post;
+export default Posts;
