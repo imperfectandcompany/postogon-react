@@ -4,6 +4,7 @@ import {
 } from '@heroicons/react/solid'
 import { HomeIcon as HomeOutline, UserCircleIcon as UserOutline } from '@heroicons/react/outline'
 import { NavLink } from 'react-router-dom'
+import { getUser } from '../../Utils/Common';
 
 
 
@@ -24,8 +25,8 @@ function Navbar() {
    : <HomeOutline className="h-5 w-5 text-yellow-100"/>}
       </NavLink>
 
-      <NavLink to={'/profile'} activeClassName="px-6 py-4 text-yellow-100 ripple-bg-yellow-600"  className=" rounded-tr-md rounded-tl-md select-none px-6 py-3 text-white cursor-pointer">
-   {pathname === '/profile' ?
+      <NavLink to={'/profile/'+getUser()} activeClassName="px-6 py-4 text-yellow-100 ripple-bg-yellow-600"  className=" rounded-tr-md rounded-tl-md select-none px-6 py-3 text-white cursor-pointer">
+   {pathname.match('/profile') ?
    <UserSolid className="h-5 w-5 text-yellow-100"/>
    : <UserOutline className="h-5 w-5 text-yellow-100"/>}
       </NavLink>            

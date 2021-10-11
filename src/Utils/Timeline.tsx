@@ -1,11 +1,19 @@
 import axios from "axios";
 
 import { getToken } from "./Common";
+import { useState, useCallback } from 'react'
 
+export function useForceUpdate() {
+  const [, setTick] = useState(0);
+  const update = useCallback(() => {
+    setTick(tick => tick + 1);
+  }, [])
+  return update;
+}
 
 //set public post data
-export const setPosts = (token: string, feed: string) => {
-      axios.get(`https://api.postogon.com/posts/public?token=${token}&feed=${feed}`).then(response => {
+export const setPosts = async (token: string, feed: string) => {
+  await axios.get(`https://api.postogon.com/posts/public?token=${token}&feed=${feed}`).then(response => {
         sessionStorage.setItem("feed"+feed+"posts", JSON.stringify(response.data));
       }).catch(error => {  
         console.log("nay");

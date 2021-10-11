@@ -7,8 +7,8 @@ import { getToken, removeLoginSession, setLoginDetails } from './Utils/Common';
 import PrivateRoute from './Utils/PrivateRoute';
 import PublicRoute from './Utils/PublicRoute';
 import Logout from './components/Logout';
-import Dashboardnew from './components/Home/dashboardnew';
 import Dashboard from './components/Dashboard';
+import { RedirectToProfile } from './components/Dashboard/Profile';
 
 
  
@@ -40,9 +40,9 @@ function App() {
             <PublicRoute exact path="/" component={Home} />
             <PrivateRoute path="/home" component={Dashboard} />
             <PrivateRoute exact path="/search" component={Dashboard} />
-            <PrivateRoute exact path="/profile" component={Dashboard} />
+            <PrivateRoute exact path="/profile/" component={Dashboard} />
+            <Route exact path="/profile/:username" component={Dashboard} />
             <PublicRoute path="/login" component={Home} />
-            <PublicRoute path="/homenew" component={Dashboardnew} />
             <PublicRoute path="/join" component={Home} />
     <PrivateRoute path="/logout">
       {Logout}
