@@ -165,6 +165,7 @@ if(loading && props.id){
 function RenderPosts(){
 
    interface iPosts {
+      post:iPosts
       PostId: number;
       PostBody: string;
       PostedBy: string;
@@ -172,8 +173,31 @@ function RenderPosts(){
       To_Whom: number;
   }
 
-   return(
+  const [isCollapsed, setCollapsed] = useState(false);
+
+  function trimText(text:string){
+   const maxLength = 140;
+   const originalContent = text.trim();
+   const content = originalContent.slice(0, maxLength);
+
+   return (
+      
       <div>
+    <span className="whitespace-pre-line">{isCollapsed ? originalContent : content}</span>  
+    {originalContent.length > maxLength ? <button className="ml-1 text-blue-600 hover:text-blue-400 focus:text-blue-500 transition focus:outline-none" onClick={()=> setCollapsed(!isCollapsed)}>{isCollapsed ? 'Show less' : 'Show more'}</button>: null}</div>
+   )
+  }
+
+   return(
+      <div className="z-0 focus:z-0">
+
+
+
+
+
+
+
+
 <InfiniteScroll
 dataLength={allPosts.length}
 next={loadPosts}
@@ -182,12 +206,12 @@ next={loadPosts}
   pullDownToRefresh
   pullDownToRefreshThreshold={50}
   pullDownToRefreshContent={
-<div className="z-0 m-4 flex mx-auto w-8 h-8 border-4 border-dashed rounded-full animate-pulse dark:border-violet-400"></div>
+<div className="z-0 focus:z-0 m-4 flex mx-auto w-8 h-8 border-4 border-dashed rounded-full animate-pulse"></div>
 
 
   }
   releaseToRefreshContent={
-<div className="z-0 m-4 flex mx-auto w-8 h-8 border-4 border-dashed rounded-full animate-spin dark:border-violet-400"></div>
+<div className="z-0 focus:z-0 m-4 flex mx-auto w-8 h-8 border-4 border-dashed rounded-full animate-spin"></div>
 
 
   }
@@ -225,9 +249,19 @@ endMessage={<div></div>}
                      </div>
                   </div>
                   <div className="mt-6 text-gray-700 space-y-4 whitespace-pre-line text-sm antialiased break-words sm:subpixel-antialiased md:antialiased">
-                     {post.PostBody}
+
+                     {trimText(post.PostBody)} 
                   </div>
-                  <div className="mt-6 flex justify-between space-x-8">
+
+
+                  <div className="flex w-full items-center">
+
+         <div className="flex justify-end ml-auto items-center">
+            <p className="text-xs text-gray-400 transition hover:text-gray-500">Bio goes here</p>
+         </div>
+      </div>
+
+                  <div className="mt-6 flex flex-row-reverse justify-between">
                      <div className="flex space-x-6">
                         <span className="inline-flex items-center text-sm">
                            <button type="button" className="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
@@ -252,7 +286,6 @@ endMessage={<div></div>}
                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5" aria-hidden="true">
                                  <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"></path>
                               </svg>
-                              <span className="font-medium text-gray-900">Share</span>
                            </button>
                         </span>
                      </div>
