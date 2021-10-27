@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "postogon",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
