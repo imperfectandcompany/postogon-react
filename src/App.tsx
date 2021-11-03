@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { App } from 'tailwind-mobile/react';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Loading from './components/Loading/Loading';
@@ -12,7 +13,7 @@ import { RedirectToProfile } from './components/Dashboard/Profile';
 
 
  
-function App() {
+function MyApp() {
   const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
@@ -35,6 +36,8 @@ function App() {
   }
     
   return (
+    <App theme="ios" safeAreas>
+      
       <BrowserRouter>
             <Switch>
             <PublicRoute exact path="/" component={Home} />
@@ -50,7 +53,8 @@ function App() {
     </PrivateRoute>
             </Switch>
       </BrowserRouter>
+      </App>
   );
 }
  
-export default App;
+export default MyApp;
