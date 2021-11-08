@@ -1,6 +1,7 @@
-import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonLoading, IonPage, IonTitle, IonToolbar, useIonAlert, useIonLoading } from '@ionic/react';
-import { SetStateAction, useState } from 'react';
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonLoading, IonPage, IonTitle, IonToolbar, useIonAlert, useIonLoading, useIonToast } from '@ionic/react';
+import { useState } from 'react';
 import axios from 'axios';
+import { setLoginDetails } from '../../utils/Common';
 
 
 const NotLoggedInNavSignIn: React.FC = () => {
@@ -9,7 +10,7 @@ const NotLoggedInNavSignIn: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
-  const [present] = useIonAlert();
+  const [present, dismiss] = useIonToast();
   const [error, setError] = useState<String | null>(null);
 
 
@@ -19,20 +20,17 @@ const NotLoggedInNavSignIn: React.FC = () => {
     setLoading(true);
     axios.post('https://api.postogon.com/auth', { username: email, password: password }).then(response => {
       setLoading(false);
+      setLoginDetails(JSON.stringify(response.data));
     }).catch(error => {
       
       setLoading(false);
       if (error.response.status === 401) 
-   
-      present({
-        header: 'There was a problem',
-        message: error.response.data,
-        buttons: [
-          { text: 'Ok', handler: (d) => console.log('Error acknowledged') },
-        ],
-        onDidDismiss: (e) => console.log('Error dismissed'),
-      })      
-      else 
+        present({
+          buttons: [{ text: 'hide', handler: () => dismiss() }],
+          message: error.response.data,
+          onDidDismiss: () => console.log('dismissed'),
+          onWillDismiss: () => console.log('will dismiss')})
+      else  
      setError("Something went wrong. Please try again later.");
     });
   }

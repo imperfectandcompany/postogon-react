@@ -1,5 +1,5 @@
 import { Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet } from '@ionic/react';
+import { IonApp, IonRouterOutlet, useIonLoading } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import NotLoggedIn from './pages/notLoggedIn/notLoggedIn';
 
@@ -22,15 +22,51 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import NotLoggedInNavSignIn from './pages/notLoggedIn/NotLoggedInNavSignIn';
+import { useEffect, useState } from 'react';
+import { getToken, removeLoginSession, setLoginDetails } from './utils/Common';
+import axios from 'axios';
+import PrivateRoute from './utils/PrivateRoute';
+import PublicRoute from './utils/PublicRoute';
 
-const App: React.FC = () => (
-  <IonApp>
+
+function App() {
+  const [authLoading, setAuthLoading] = useState(true);
+  const [present, dismiss] = useIonLoading();
+
+  useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      return;
+    }
+ 
+    axios.get(`https://api.postogon.com/verifyToken?token=${token}`).then(response => {
+      setLoginDetails(JSON.stringify(response.data));
+      setAuthLoading(false);
+    }).catch(error => {
+      removeLoginSession();
+      setAuthLoading(false);
+    });
+  }, []);
+ 
+  if (authLoading && getToken()) {
+    present({
+      message: 'Loading...',
+      duration: 3000
+    })
+  }
+
+    
+  return (
+    <IonApp>
     <IonReactRouter>
       <IonRouterOutlet>
+      <PublicRoute>
       <Route path="/" render={props => <NotLoggedIn {...props} />} />
+      </PublicRoute>
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
-);
+  );
+}
 
 export default App;
