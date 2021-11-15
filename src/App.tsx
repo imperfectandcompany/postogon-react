@@ -66,7 +66,7 @@ function App() {
 
   if (authLoading && getToken()) {
     present({
-      message: 'Loading...',
+      message: 'Loadidng...',
       duration: 1500
     })
   }
