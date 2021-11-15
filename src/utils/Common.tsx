@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useLocation } from 'react-router-dom';
 
+
 // return the user data from the session storage
 export const getUser = () => {
   const userStr = sessionStorage.getItem('username');
@@ -22,18 +23,20 @@ export const getUid = () => {
   else return null;
 }
 
-  // return the token from the session storage
-  export const getToken = () => {
-    const getCookieValue = (name: string) =>
-    document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || "";
-    if(getCookieValue('POSTOGONID_') == "1"){
-      if(getCookieValue('POSTOGONID') !== "1"){
-        return getCookieValue('POSTOGONID');
-      } else{
-        return null;
-      }
+ // return the token from the session storage
+ export const getToken = () => {
+  const getCookieValue = (name: string) =>
+  document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || "";
+  if(getCookieValue('POSTOGONID_') == "1"){
+    if(getCookieValue('POSTOGONID') !== "1"){
+      return getCookieValue('POSTOGONID');
+    } else{
+      return false;
     }
+  } else {
+    return false;
   }
+}
    
   // remove the token and user from the session storage
   export const removeUserToken = () => {
@@ -53,13 +56,7 @@ export const getUid = () => {
     return location.pathname;
   }
 
-  export const setLoginDetails = (data: string) => {
-  const userDetails = JSON.parse(data);
-  setUserToken(userDetails['Token']);
-  setUserSession(userDetails['Uid'],userDetails['Username'],userDetails['Email']);
-  }
-
-  export const removeLoginSession = () => {
+  export const deleteToken = () => {
     const token = getToken();
     if (!token) {
       return;
@@ -67,34 +64,15 @@ export const getUid = () => {
     axios.delete(`https://api.postogon.com/deleteToken?token=${token}`).then(res => {
     console.log('Removed Token from backend');
   })
+  }
+
+  export const removeLoginSession = () => {
+    //remove user token cookies from frontend
     removeUserToken();
+    deleteToken();
+    //remove general stored data from session storage originally set on login or useeffect from app.tsx
     sessionStorage.removeItem('uid');
     sessionStorage.removeItem('username');
     sessionStorage.removeItem('email');
     console.log('Removed user data from session storage');
   }
-
-
-  
-
-   
-  // set the token and user from the session storage
-  export const setUserToken = (token: object) => {
-      const d = new Date();
-      d.setTime(d.getTime() + 7 * 24 * 60 * 60 * 1000);
-      let expires = "expires=" + d.toUTCString();
-      document.cookie =
-        "POSTOGONID=" + token + ";" + expires + ";path=/";
-      document.cookie = "POSTOGONID_=1;" + expires + ";path=/";
-      console.log("User token set!")
-  }
-
-  //set user's id, username, and email
- export const setUserSession = (uid:object, username:object, email:object) => {
-  sessionStorage.setItem('uid', JSON.stringify(uid));
-  console.log("Uid token set!")  
-  sessionStorage.setItem('username', JSON.stringify(username));
-  console.log("Username token set!")  
-  sessionStorage.setItem('email', JSON.stringify(email));
-  console.log("Email token set!")  
- }

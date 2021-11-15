@@ -1,7 +1,6 @@
-import { Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, useIonLoading } from '@ionic/react';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { IonApp, IonRouterOutlet, IonTabs, useIonLoading, useIonRouter, useIonViewDidEnter, useIonViewDidLeave, useIonViewWillEnter, useIonViewWillLeave } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import NotLoggedIn from './pages/notLoggedIn/notLoggedIn';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -21,52 +20,80 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import NotLoggedInNavSignIn from './pages/notLoggedIn/NotLoggedInNavSignIn';
-import { useEffect, useState } from 'react';
-import { getToken, removeLoginSession, setLoginDetails } from './utils/Common';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
+import { getToken, removeLoginSession } from './utils/Common';
+import { setLoginDetails } from './utils/Login';
+import LoggedIn from './pages/LoggedIn/LoggedIn';
+import { verifyAuth } from './utils/VerifyAuth';
+import NotLoggedIn from './pages/NotLoggedIn/NotLoggedIn';
+import NotLoggedInNav from './pages/NotLoggedIn/NotLoggedInNav';
+import NotLoggedInNavSignUp from './pages/NotLoggedIn/NotLoggedInNavSignUp';
+import NotLoggedInNavSignIn from './pages/NotLoggedIn/NotLoggedInNavSignIn';
+import LoggedInTimeline from './pages/LoggedIn/LoggedInTimeline';
+import API from './utils/API';
+import { isCompositeComponentWithType } from 'react-dom/test-utils';
+import PrivateRoute from './utils/PrivateRoute';
+import AuthContext from './AuthedContext'
+import React from 'react';
+
 
 
 function App() {
   const [authLoading, setAuthLoading] = useState(true);
   const [present, dismiss] = useIonLoading();
+  const { authValues } = React.useContext(AuthContext);
+
+
+
+  const { verify } = React.useContext(AuthContext);
 
   useEffect(() => {
     const token = getToken();
     if (!token) {
       return;
     }
- 
-    axios.get(`https://api.postogon.com/verifyToken?token=${token}`).then(response => {
-      setLoginDetails(JSON.stringify(response.data));
+    let result = verify();
+    if (result) {
       setAuthLoading(false);
-    }).catch(error => {
-      removeLoginSession();
+      console.log("account verified");
+    } else {
       setAuthLoading(false);
-    });
+      console.log("account unverified");
+    }
   }, []);
- 
+
   if (authLoading && getToken()) {
     present({
       message: 'Loading...',
-      duration: 3000
+      duration: 1500
     })
   }
 
-    
   return (
     <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-      <PublicRoute>
-      <Route path="/" render={props => <NotLoggedIn {...props} />} />
-      </PublicRoute>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
+      {!authValues.authenticated && !getToken() ?
+        <IonReactRouter>
+        <IonRouterOutlet>
+          <Route path="/" component={NotLoggedIn} />
+        </IonRouterOutlet>
+      </IonReactRouter> :
+      (<IonReactRouter>
+        <IonRouterOutlet>
+          <Route path="/" component={LoggedIn} />
+          <Route render={() => <Redirect to="/home"/>} />
+        </IonRouterOutlet>
+      </IonReactRouter>)
+      }
+
+
+
+
+
+    </IonApp>
   );
 }
 
 export default App;
+

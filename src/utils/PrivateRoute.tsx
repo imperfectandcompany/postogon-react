@@ -1,5 +1,8 @@
-import { Redirect, Route, RouteProps } from 'react-router';
-import { getToken } from './Common';
+import React, { useEffect, useContext, useState } from "react";
+import { Route, Redirect, RouteProps } from "react-router";
+import API from "./API";
+import { getToken, removeLoginSession } from "./Common";
+
 
 export type PrivateRouteProps = {
   } & RouteProps;

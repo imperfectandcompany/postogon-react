@@ -1,7 +1,9 @@
-import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonLoading, IonPage, IonTitle, IonToolbar, useIonAlert, useIonLoading, useIonToast } from '@ionic/react';
 import { useState } from 'react';
+import axios from 'axios';
+import { setLoginDetails } from '../../utils/Login';
 
-const NotLoggedInNavSignIn: React.FC = () => {
+const NotLoggedInNavSignUp: React.FC = () => {
 
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
@@ -10,7 +12,6 @@ const NotLoggedInNavSignIn: React.FC = () => {
     console.log({email});
     console.log({password});
   }
-   
     return (
       <IonPage>
       <IonHeader>
@@ -47,5 +48,4 @@ const NotLoggedInNavSignIn: React.FC = () => {
     );
   };
 
-
-export default NotLoggedInNavSignIn;
+export default NotLoggedInNavSignUp;

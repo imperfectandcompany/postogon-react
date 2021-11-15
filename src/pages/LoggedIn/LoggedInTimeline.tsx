@@ -1,6 +1,8 @@
 import { IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { RouteComponentProps } from 'react-router';
 
-  const NotLoggedInNav: React.FC = () => {
+const LoggedInTimeline: React.FC = () => {
+  
     return (
       <IonPage>
         <IonHeader>
@@ -9,17 +11,10 @@ import { IonContent, IonHeader, IonItem, IonLabel, IonList, IonPage, IonTitle, I
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <IonList>
-            <IonItem routerLink="signup">
-              <IonLabel>Get started</IonLabel>
-            </IonItem>
-            <IonItem routerLink="signin">
-              <IonLabel>Sign in</IonLabel>
-            </IonItem>
-          </IonList>
+      Yo
         </IonContent>
       </IonPage>
     );
   };
 
-export default NotLoggedInNav;
+export default LoggedInTimeline;
