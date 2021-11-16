@@ -81,7 +81,7 @@ function Posts(props: PostProps) {
         setLoading(true);        
         refreshData();
         setTimeout(() => {
-            console.log('end');
+            setLoading(false);  
             event.detail.complete();
         }, 1000);
     }
