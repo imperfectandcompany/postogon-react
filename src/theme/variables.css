@@ -78,6 +78,51 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-tint: #f5f6f9;
 }
 
+  /*
+   * Custom Stuff
+   * -------------------------------------------
+   */
+ion-title.title-large {
+  color: purple!important;
+  font-size: 30px;
+}
+
+.loadingspinner{
+  --color : #adadad;
+}
+
+.refresher-ios .refresher-pulling-icon, .refresher-ios .refresher-pulling-text, .refresher-ios .refresher-refreshing-icon, .refresher-ios .refresher-refreshing-text {
+  color: var(--ion-text-color,#adadad);
+}
+
+ion-refresher ion-refresher-content {
+  --color:#adadad !important;
+}
+  .refresher-pulling-text, .refresher-refreshing-text, .refresher-refreshing-icon, .refresher-pulling-icon {
+    color: #adadad !important;
+  }
+
+
+  .ion-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: grey;
+    height: 500px;
+ }
+ 
+ 
+ 
+ .ion-card {
+     flex-basis: 100%;
+ }
+ 
+ h2 {
+    color: blue;  
+ }
+
+ion-refresher.refresher-active { z-index: 1!important; }
+
 @media (prefers-color-scheme: dark) {
   /*
    * Dark Colors

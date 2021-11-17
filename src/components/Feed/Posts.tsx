@@ -5,9 +5,10 @@ import { NodeBuilderFlags } from 'typescript';
 import Post from '../Timeline/Post';
 import Loading from '../Loading/Loading';
 import { getToken } from '../../utils/Common';
-import { IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel, IonList, IonRefresher, IonRefresherContent, useIonViewWillEnter } from '@ionic/react';
-import { chevronDownCircleOutline } from 'ionicons/icons';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel, IonList, IonNote, IonRefresher, IonRefresherContent, IonRow, useIonViewWillEnter } from '@ionic/react';
 import { RefresherEventDetail } from '@ionic/core';
+import { chevronDownCircleOutline, pin, walk, warning, wifi, wine } from 'ionicons/icons';
+
 
 interface PostProps {
     feed: string;
@@ -78,10 +79,10 @@ function Posts(props: PostProps) {
     });
 
     function doRefresh(event: CustomEvent<RefresherEventDetail>) {
-        setLoading(true);        
+        setLoading(true);
         refreshData();
         setTimeout(() => {
-            setLoading(false);  
+            setLoading(false);
             event.detail.complete();
         }, 1000);
     }
@@ -203,16 +204,83 @@ function Posts(props: PostProps) {
             )
         }
 
+        function openOptions() {
+            console.log("clicked");
+        }
+
         return (
             <div className="">
-                <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
-                    <IonRefresherContent
-                        pullingIcon={chevronDownCircleOutline}
-                        pullingText="Pull to refresh"
-                        refreshingSpinner="bubbles"
-                    >
-                    </IonRefresherContent>
-                </IonRefresher>
+                <div className="mb-40 mt-20">
+                    <div className="bg-white" id="cardHeader">
+                        <div className="flex">
+                            <div className="flex items-center">
+                                <div className="w-10 h-10 font-bold text-center transition text-white bg-gray-700 bg-center mr-2 border-4 border-gray-500 rounded-full cursor-pointer select-none hover:opacity-80">
+                                    <div className="my-1">?</div>
+                                    <span className="flex transition -my-4 mx-5 animate-bounce focus:opacity-50 focus:outline-none select-none"></span>
+                                </div>
+
+                                <div>
+                                    {" "}
+                                    <div className="flex items-center">
+                                        <p className="mr-1 font-bold text-black cursor-pointer hover:underline">
+                                            Username
+                                        </p>
+                                    </div>
+                                    <div className="flex items-center transition duration-500 transform hover:-translate-y-1"></div>
+                                    <div className="flex items-center mt-1 text-xs text-gray-600">
+                                        <p>Bio / Status</p>
+                                        <p className="ml-1 mr-1">•</p>
+                                        <p>2 seconds ago</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="ml-auto flex items-start">
+                                <button className="overflow-hidden focus:outline-none">
+                                    <svg
+                                        className="h-4 leading-none text-gray-500 cursor-pointer fill-current title-font hover:text-gray-700"
+                                        viewBox="0 0 60 60"
+                                        xmlns="https://www.w3.org/2000/svg"
+                                    >
+                                        <path d="M8 22c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zM52 22c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zM30 22c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white text-black" id="cardContent">
+                        <div>
+                            <p className="text-sm antialiased break-words sm:subpixel-antialiased md:antialiased">
+                                ewewew
+                            </p>
+                        </div>
+                        <div className="flex flex-row-reverse">
+                            <p className="text-xs text-gray-400 transition hover:text-gray-500">
+                                School '22, Studying Engineering 💻
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="bg-white text-black" id="cardFooter">
+                        <div className="flex w-full justify-start border-t border-gray-100 border-opacity-50">
+                            <div className="flex flex-row-reverse">
+                                <div>🔒</div>
+                            </div>
+                            <div className="flex justify-end w-full ">
+                                <div className="like unliked focus:outline-none"></div>
+                                <span className="text-gray-400 ml-2">14 </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p>
+                    <IonRefresher className="" slot="fixed" onIonRefresh={doRefresh}>
+                        <IonRefresherContent
+                        >
+                        </IonRefresherContent>
+                    </IonRefresher>   </p>
                 <IonList>
                     {posts && posts.length > 0 && !loading ? allPosts.map((post: iPosts) =>
                         <li key={post.PostId} className="bg-white px-4 py-6 shadow sm:p-6">
@@ -229,13 +297,8 @@ function Posts(props: PostProps) {
                                     </div>
                                     <div className="flex-shrink-0 self-center flex">
                                         <div className="relative inline-block text-left">
-                                            <div>
-                                                <button className="-m-2 p-2 rounded-full flex items-center text-gray-400 hover:text-gray-600" id="headlessui-menu-button-4" type="button" aria-haspopup="true" aria-expanded="false">
-                                                    <span className="sr-only">Open options</span>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5" aria-hidden="true">
-                                                        <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
-                                                    </svg>
-                                                </button>
+                                            <div className="text-black">
+                                                ewewew
                                             </div>
                                         </div>
                                     </div>
