@@ -6,6 +6,7 @@ import API from '../../utils/API';
 import { Redirect, RouteComponentProps, useHistory } from 'react-router';
 import AuthContext from '../../AuthedContext';
 import React from 'react';
+import styles from './NotLoggedInNavSignIn.module.css'; // Import css modules stylesheet as styles
 
 
 
@@ -40,7 +41,7 @@ function NotLoggedInNavSignIn() {
   }
 
   return (
-    <IonPage>
+    <IonPage >
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
@@ -49,7 +50,7 @@ function NotLoggedInNavSignIn() {
           <IonTitle>Sign In</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent>
+      <IonContent >
         <IonList>
           <IonListHeader lines="full">
             <IonLabel>

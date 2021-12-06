@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import { NavLink } from 'react-router-dom';
 import { NodeBuilderFlags } from 'typescript';
 import Post from '../Timeline/Post';
@@ -210,8 +209,8 @@ function Posts(props: PostProps) {
 
         return (
             <div className="">
-                <div className="mb-40 mt-20">
-                    <div className="bg-white" id="cardHeader">
+                <div className="mb-40 ">
+                    <div className="bg-white p-4" id="cardHeader">
                         <div className="flex">
                             <div className="flex items-center">
                                 <div className="w-10 h-10 font-bold text-center transition text-white bg-gray-700 bg-center mr-2 border-4 border-gray-500 rounded-full cursor-pointer select-none hover:opacity-80">
@@ -236,44 +235,101 @@ function Posts(props: PostProps) {
                             </div>
 
                             <div className="ml-auto flex items-start">
-                                <button className="overflow-hidden focus:outline-none">
-                                    <svg
-                                        className="h-4 leading-none text-gray-500 cursor-pointer fill-current title-font hover:text-gray-700"
-                                        viewBox="0 0 60 60"
-                                        xmlns="https://www.w3.org/2000/svg"
-                                    >
-                                        <path d="M8 22c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zM52 22c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zM30 22c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8z"></path>
-                                    </svg>
+                                <button 
+                                
+                                
+                                
+                                onClick={openOptions} 
+                                
+                                
+                                className="overflow-hidden focus:outline-none">
+<svg xmlns="http://www.w3.org/2000/svg" className="text-black h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+</svg>
                                 </button>
                             </div>
                         </div>
                     </div>
 
                     <div className="bg-white text-black" id="cardContent">
-                        <div>
+                        <div className="pl-6 pr-6 pt-6 pb-3" id="cardContentItem">
                             <p className="text-sm antialiased break-words sm:subpixel-antialiased md:antialiased">
                                 ewewew
                             </p>
                         </div>
-                        <div className="flex flex-row-reverse">
+                        <div className="pl-6 pr-6 pb-6 pt-3 flex flex-row-reverse" id="cardContentItem">
                             <p className="text-xs text-gray-400 transition hover:text-gray-500">
                                 School '22, Studying Engineering 💻
                             </p>
                         </div>
                     </div>
 
-                    <div className="bg-white text-black" id="cardFooter">
-                        <div className="flex w-full justify-start border-t border-gray-100 border-opacity-50">
+                    <div
+                        className="bg-white text-black border-t border-gray-100 p-4"
+                        id="cardFooter"
+                    >
+                        <div className="flex w-full justify-start">
                             <div className="flex flex-row-reverse">
-                                <div>🔒</div>
+                                <div className="flex space-x-4">
+                                    <div className="flex">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-5 w-5"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <div className="flex">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-5 w-5"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                                            />
+                                        </svg>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex justify-end w-full ">
-                                <div className="like unliked focus:outline-none"></div>
-                                <span className="text-gray-400 ml-2">14 </span>
+
+                            <div className="flex justify-end w-full items-center">
+                                <div>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-5 w-5"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                                        />
+                                    </svg>
+                                </div>
+                                <div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
 
                 <p>
                     <IonRefresher className="" slot="fixed" onIonRefresh={doRefresh}>
