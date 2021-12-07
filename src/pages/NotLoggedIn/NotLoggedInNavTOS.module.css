@@ -40,26 +40,3 @@
 }
 
 
-
-
-
-.modal { 
-  --ion-background-color: linear-gradient(180deg, #FF8744 0.25%, rgba(255, 137, 137, 0.59) 54.17%, #DE7A7A 100%) !important;
-}
-
-.modal .modal-toolbar {
-  --background: transparent !important;
-  --border-color: transparent !important;
-  --border: transparent !important;
-}
-
-
-.modal .modal-content {
-  --background: transparent !important;
-  --border-color: transparent !important;
-  --border: transparent !important;
-}
-
-.modal .modal-content::part(scroll) {
-
-}

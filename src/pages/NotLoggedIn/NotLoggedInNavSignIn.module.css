@@ -1,3 +1,53 @@
 .bg {
-    --ion-background-color: black !important;
+  --ion-background-color: linear-gradient(180deg, #FF8744 100%, rgba(255, 137, 137, 0.59) 54.17%, #DE7A7A 100%) !important;
+
   }
+
+
+.modal { 
+  --ion-background-color: linear-gradient(180deg, #FF8744 0.25%, rgba(255, 137, 137, 0.59) 54.17%, #DE7A7A 100%) !important;
+
+}
+
+
+.toasts{
+  --background:white !important;
+  --button-color:#FF8744 !important;
+  --color:#FF8744 !important;
+}
+
+
+.transparentbg {
+  background: transparent !important;
+}
+
+ion-input{
+  border-color: rgba(0, 0, 0, 0);
+	background-color: rgba(0, 0, 0, 0);
+	color: white; 
+  --background: rgba(0, 0, 0, 0) !important;
+  }
+
+.inputs {
+	border-color: rgba(0, 0, 0, 0);
+	background-color: rgba(0, 0, 0, 0);
+	color: white; 
+}
+
+.toolbar {
+  --background: transparent !important;
+  --border-color: transparent !important;
+  --border: transparent !important;
+  background: transparent !important;
+}
+
+
+.modal .modal-content {
+  --background: transparent !important;
+  --border-color: transparent !important;
+  --border: transparent !important;
+}
+
+.modal .modal-content::part(scroll) {
+
+}
