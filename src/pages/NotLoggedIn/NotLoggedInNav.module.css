@@ -28,13 +28,14 @@
   /* For mobile phones: */
   .bg::before {    
     content: "";
-    opacity: 0.30;
+    opacity: 0.25;
     width:1600px;
     height:900px;
     position:absolute;
     left:-314px;
     top:-83px;
-    background-image: url("./images/selfie.png");	background-repeat:no-repeat;
+    background-image: url("./images/selfie.png");
+    	background-repeat:no-repeat;
     background-size:cover;
   }
 }
@@ -51,6 +52,13 @@
   --background: transparent !important;
   --border-color: transparent !important;
   --border: transparent !important;
+}
+
+.text { 
+  --background: transparent !important;
+  background:transparent !important;
+  color: none !important;
+  --border-color: transparent !important;
 }
 
 

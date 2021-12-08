@@ -112,6 +112,9 @@ ion-title.title-large {
   font-size: 30px;
 }
 
+body ion-content {
+  font-size: 1.25rem;
+}
 
 .ion-color-white {
   --ion-color-base: var(--ion-color-white);
