@@ -15,7 +15,7 @@ const NotLoggedInNav: React.FC = () => {
       <IonHeader class="ion-no-border" className={`${styles.text}`}  collapse="condense" >
         <div className="flex space-x-4 ion-justify-content-center ion-align-items-center mt-12 mb-14 text-4xl sm:text-6xl md:text-8xl lg:text-8xl font-bold">
           <img src={process.env.PUBLIC_URL + '/assets/icon/icon.svg'} className="w-12 sm:w-24 md:w-32 lg:w-36" alt="image" />
-          <div>Postogon</div>
+          <div className="text-white">Postogon</div>
         </div>
       </IonHeader>
         <NotLoggedInNavTOS showTos={showTos} setShowTos={setShowTos} />

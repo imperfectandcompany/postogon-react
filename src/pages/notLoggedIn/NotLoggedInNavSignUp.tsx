@@ -17,7 +17,7 @@ const NotLoggedInNavSignUp: React.FC = () => {
     return (
       <IonPage className={`${styles.bg}`} >
       <IonHeader>
-      <IonToolbar color="none"  className={`${styles.toolbar}`} >
+      <IonToolbar color="white" className={`${styles.toolbar}`} >
           <IonButtons slot="start">
             <IonBackButton />
           </IonButtons>
@@ -27,19 +27,19 @@ const NotLoggedInNavSignUp: React.FC = () => {
       <IonContent fullscreen>
       <IonList className={`${styles.transparentbg}`}>
           <IonListHeader lines="full" >
-            <IonLabel  color="white">
+            <IonLabel color="white">
               Get Started
             </IonLabel>
           </IonListHeader>
           <div className="flex flex-col m-10">
-            <div className="text-center text-lg font-medium mb-8">We’re so excited to have you here! Creating an account is the first step.</div>
-            <IonItem className="flex" color="none" lines="inset">
+            <div className="text-center text-lg hidden text-white font-medium mb-8">We’re so excited to have you here! Creating an account is the first step.</div>
+            <IonItem className="flex" color="none">
               <IonLabel position="floating">Email</IonLabel>
               <IonInput type="email" value={email}  onIonChange={e => setEmail(e.detail.value!)}></IonInput>
             </IonItem>
-            <IonItem className="flex"  color="none" lines="inset">
+            <IonItem className="flex">
               <IonLabel position="floating">Password</IonLabel>
-              <IonInput type="password" value={password} onIonChange={e => setPassword(e.detail.value!)}></IonInput>
+              <IonInput type="password" color="white" value={password} onIonChange={e => setPassword(e.detail.value!)}></IonInput>
             </IonItem>
             <div className="flex justify-center mt-6">
             <IonButton expand="block" size="large"

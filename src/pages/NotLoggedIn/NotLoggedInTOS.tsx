@@ -48,9 +48,9 @@ function NotLoggedInNavTOS({ setShowTos, showTos }: any) {
       <IonHeader collapse="condense">
         <IonToolbar className={`${styles['modal-toolbar']}`}>
           <IonButtons slot="start" className="cursor-pointer focus:cursor-default" onClick={() => setShowTos(false)}>
-            <IonIcon slot="icon-only" icon={chevronDown} />
+            <IonIcon slot="icon-only" color="white" icon={chevronDown} />
           </IonButtons>
-          <IonTitle>Terms of Service</IonTitle>
+          <IonTitle color="white">Terms of Service</IonTitle>
         </IonToolbar>
       </IonHeader>
 

@@ -4,10 +4,10 @@ import { NodeBuilderFlags } from 'typescript';
 import Post from '../Timeline/Post';
 import Loading from '../Loading/Loading';
 import { getToken } from '../../utils/Common';
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel, IonList, IonNote, IonRefresher, IonRefresherContent, IonRow, useIonViewWillEnter } from '@ionic/react';
+import { IonActionSheet, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel, IonList, IonNote, IonRefresher, IonRefresherContent, IonRow, useIonViewWillEnter } from '@ionic/react';
 import { RefresherEventDetail } from '@ionic/core';
 import { chevronDownCircleOutline, pin, walk, warning, wifi, wine } from 'ionicons/icons';
-
+import MoreOptions from './MoreOptions';
 
 interface PostProps {
     feed: string;
@@ -208,7 +208,7 @@ function Posts(props: PostProps) {
         }
 
         return (
-            <div className="">
+            <div className="">  
                 <div className="mb-40 ">
                     <div className="bg-white p-4" id="cardHeader">
                         <div className="flex">
@@ -235,18 +235,7 @@ function Posts(props: PostProps) {
                             </div>
 
                             <div className="ml-auto flex items-start">
-                                <button 
-                                
-                                
-                                
-                                onClick={openOptions} 
-                                
-                                
-                                className="overflow-hidden focus:outline-none">
-<svg xmlns="http://www.w3.org/2000/svg" className="text-black h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-</svg>
-                                </button>
+<MoreOptions isOwner={true}/>
                             </div>
                         </div>
                     </div>
@@ -254,7 +243,7 @@ function Posts(props: PostProps) {
                     <div className="bg-white text-black" id="cardContent">
                         <div className="pl-6 pr-6 pt-6 pb-3" id="cardContentItem">
                             <p className="text-sm antialiased break-words sm:subpixel-antialiased md:antialiased">
-                                ewewew
+                                ewewews
                             </p>
                         </div>
                         <div className="pl-6 pr-6 pb-6 pt-3 flex flex-row-reverse" id="cardContentItem">

@@ -50,7 +50,7 @@ function NotLoggedInNavSignIn() {
           <IonButtons slot="start">
             <IonBackButton />
           </IonButtons>
-          <IonTitle>Sign In</IonTitle>
+          <IonTitle color="white">Sign In</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -61,14 +61,14 @@ function NotLoggedInNavSignIn() {
             </IonLabel>
           </IonListHeader>
           <div className="flex flex-col m-10">
-            <div className="text-center text-lg font-medium mb-8">We’re so excited to see you again!</div>
-            <IonItem className="flex" color="none" lines="inset">
-              <IonLabel position="floating">Email</IonLabel>
-              <IonInput type="email" value={email}  onIonChange={e => setEmail(e.detail.value!)}></IonInput>
+            <div className="text-center text-lg text-white font-medium mb-8">We’re so excited to see you again!</div>
+            <IonItem className="flex" lines="inset">
+              <IonLabel color="white" position="floating">Email</IonLabel>
+              <IonInput className="text-white" type="email" value={email}  onIonChange={e => setEmail(e.detail.value!)}></IonInput>
             </IonItem>
-            <IonItem className="flex"  color="none" lines="inset">
-              <IonLabel position="floating">Password</IonLabel>
-              <IonInput type="password" value={password} onIonChange={e => setPassword(e.detail.value!)}></IonInput>
+            <IonItem className="flex" lines="inset">
+              <IonLabel color="white" position="floating">Password</IonLabel>
+              <IonInput className="text-white" type="password" value={password} onIonChange={e => setPassword(e.detail.value!)}></IonInput>
             </IonItem>
             <div className="flex justify-center mt-6">
             <IonButton expand="block" size="large"
@@ -84,7 +84,7 @@ Continue
                 message={'Please wait...'}
               />
             </div>
-            <div className="text-center text-lg font-medium mt-8 underline">Forgot password</div>
+            <div className="text-center text-white text-lg font-medium mt-8 underline">Forgot password</div>
 
             <span className="mx-auto text-red-500 text-lg">{error}</span>
           </div>
