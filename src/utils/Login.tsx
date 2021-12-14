@@ -1,6 +1,3 @@
-import axios from "axios";
-import { useLocation } from 'react-router-dom';
-
   // set the token cookies for the users
   export const setUserToken = (token: object) => {
     const d = new Date();

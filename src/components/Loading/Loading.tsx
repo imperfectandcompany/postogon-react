@@ -10,15 +10,14 @@ export class Loading extends React.Component {
     return (
 <div>
       <div
-           className="fixed inset-0 z-50 flex items-center w-full justify-center animate-pulse text-3xl font-bold bg-white"
-           x-ref="loading"
+           className="fixed inset-0 z-50 flex items-center justify-center w-full text-3xl font-bold bg-white"
            >
         <img
-             className="h-32 w-32 mx-auto" 
+             className="w-32 h-32 mx-auto motion-reduce:animate-spin" 
              style={logoColor}
-             src="https://postogon.com/school/public_html/assets/logo.svg"
+             src={process.env.PUBLIC_URL + '/assets/icon/icon.svg'}
              alt="postogon logo"/>
-        <div className="h-16 flex items-center mx-auto">Loading.....
+        <div className="flex items-center h-16 mx-auto text-black">Loading.....
         </div>
     </div>
 </div>

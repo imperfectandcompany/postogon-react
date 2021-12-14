@@ -27,7 +27,7 @@ export const getUid = () => {
  export const getToken = () => {
   const getCookieValue = (name: string) =>
   document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || "";
-  if(getCookieValue('POSTOGONID_') == "1"){
+  if(getCookieValue('POSTOGONID_') === "1"){
     if(getCookieValue('POSTOGONID') !== "1"){
       return getCookieValue('POSTOGONID');
     } else{

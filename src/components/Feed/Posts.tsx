@@ -1,13 +1,9 @@
-import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { NodeBuilderFlags } from 'typescript';
-import Post from '../Timeline/Post';
-import Loading from '../Loading/Loading';
 import { getToken } from '../../utils/Common';
-import { IonActionSheet, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel, IonList, IonNote, IonRefresher, IonRefresherContent, IonRow, useIonViewWillEnter } from '@ionic/react';
 import { RefresherEventDetail } from '@ionic/core';
-import { chevronDownCircleOutline, pin, walk, warning, wifi, wine } from 'ionicons/icons';
 import MoreOptions from './MoreOptions';
+import { useIonViewWillEnter, IonRefresher, IonRefresherContent, IonList, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
 
 interface PostProps {
     feed: string;
@@ -28,18 +24,18 @@ function Posts(props: PostProps) {
 
     const getData = async () => {
         const token = getToken();
-        if (props.type == "timeline") {
+        if (props.type ==="timeline") {
             const response = await fetch(`https://api.postogon.com/posts/public?token=${token}&feed=${props.feed}`);
             const newData = await response.json();
             setData(newData);
             setAllPosts(newData.slice(0, perPage));
-        } else if (props.type == "profile") {
+        } else if (props.type === "profile") {
             const response = await fetch(`https://api.postogon.com/profile?username=${props.username}&feed=${props.feed}`);
             const newData = await response.json();
             setData(newData);
             setAllPosts(newData.slice(0, perPage));
         }
-        else if (props.type == "id") {
+        else if (props.type === "id") {
             const response = await fetch(`https://api.postogon.com/posts?id=${props.id}`);
             const newData = await response.json();
             setData(newData);
@@ -54,18 +50,18 @@ function Posts(props: PostProps) {
 
     const refreshData = async () => {
         const token = getToken();
-        if (props.type == "timeline") {
+        if (props.type === "timeline") {
             const response = await fetch(`https://api.postogon.com/posts/public?token=${token}&feed=${props.feed}`);
             const newData = await response.json();
             setData(newData);
             setAllPosts(newData.slice(0, perPage));
-        } else if (props.type == "profile") {
+        } else if (props.type === "profile") {
             const response = await fetch(`https://api.postogon.com/profile?username=${props.username}&feed=${props.feed}`);
             const newData = await response.json();
             setData(newData);
             setAllPosts(newData.slice(0, perPage));
         }
-        else if (props.type == "id") {
+        else if (props.type === "id") {
             const response = await fetch(`https://api.postogon.com/posts?id=${props.id}`);
             const newData = await response.json();
             setData(newData);
@@ -105,7 +101,7 @@ function Posts(props: PostProps) {
             loadPosts();
             console.log('Loaded data');
             ev.target.complete();
-            if (posts.length == 1000) {
+            if (posts.length === 1000) {
                 setInfiniteDisabled(true);
             }
         }, 500);
@@ -117,20 +113,20 @@ function Posts(props: PostProps) {
             <div>
                 <ul className="">
                     {[...Array(n)].map((object, i) => (
-                        <li key={i} className="bg-white px-4 py-6 shadow sm:p-6">
+                        <li key={i} className="px-4 py-6 bg-white shadow sm:p-6">
                             <div>
                                 <div className="flex space-x-3">
                                     <div className="flex-shrink-0">
-                                        <div className="animate-pulse rounded-full bg-gray-300 h-10 w-10"></div>
+                                        <div className="w-10 h-10 bg-gray-300 rounded-full animate-pulse"></div>
                                     </div>
-                                    <div className="min-w-0 flex-1 space-y-1">
-                                        <div className="animate-pulse h-4 bg-gray-200 rounded w-2/5"></div>
-                                        <div className="animate-pulse h-3 bg-gray-200 rounded w-2/5"></div>
+                                    <div className="flex-1 min-w-0 space-y-1">
+                                        <div className="w-2/5 h-4 bg-gray-200 rounded animate-pulse"></div>
+                                        <div className="w-2/5 h-3 bg-gray-200 rounded animate-pulse"></div>
                                     </div>
-                                    <div className="flex-shrink-0 self-center flex">
+                                    <div className="flex self-center flex-shrink-0">
                                         <div className="relative inline-block text-left">
                                             <div>
-                                                <div className="animate-pulse bg-gray-200 w-6 h-6"></div>
+                                                <div className="w-6 h-6 bg-gray-200 animate-pulse"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -139,27 +135,27 @@ function Posts(props: PostProps) {
                             <div className="mt-6 space-y-2">
 
                                 <div className="h-4 bg-gray-200 rounded"></div>
-                                <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                                <div className="w-5/6 h-4 bg-gray-200 rounded"></div>
                             </div>
-                            <div className="mt-6 flex flex-row-reverse justify-between space-x-8">
+                            <div className="flex flex-row-reverse justify-between mt-6 space-x-8">
                                 <div className="flex space-x-6">
                                     <span className="inline-flex items-center text-sm">
                                         <div className="inline-flex space-x-2">
-                                            <div className="animate-pulse bg-gray-200 w-10 h-4"></div>
-                                            <span className="animate-pulse bg-gray-200 w-8 h-4"></span><span className="sr-only">Likes</span>
+                                            <div className="w-10 h-4 bg-gray-200 animate-pulse"></div>
+                                            <span className="w-8 h-4 bg-gray-200 animate-pulse"></span><span className="sr-only">Likes</span>
                                         </div>
                                     </span>
                                     <span className="inline-flex items-center text-sm">
                                         <div className="inline-flex space-x-2">
-                                            <div className="animate-pulse bg-gray-200 w-10 h-4"></div>
-                                            <span className="animate-pulse bg-gray-200 w-8 h-4"></span><span className="sr-only">Comments</span>
+                                            <div className="w-10 h-4 bg-gray-200 animate-pulse"></div>
+                                            <span className="w-8 h-4 bg-gray-200 animate-pulse"></span><span className="sr-only">Comments</span>
                                         </div>
                                     </span>
                                 </div>
                                 <div className="flex text-sm">
                                     <span className="inline-flex items-center text-sm">
                                         <div className="inline-flex space-x-2">
-                                            <div className="animate-pulse bg-gray-200 w-10 h-4"></div>
+                                            <div className="w-10 h-4 bg-gray-200 animate-pulse"></div>
                                         </div>
                                     </span>
                                 </div>
@@ -199,23 +195,19 @@ function Posts(props: PostProps) {
 
                 <div>
                     <span className="whitespace-pre-line">{isCollapsed ? originalContent : content}</span>
-                    {originalContent.length > maxLength ? <button className="ml-1 text-blue-600 hover:text-blue-400 focus:text-blue-500 transition focus:outline-none" onClick={() => setCollapsed(!isCollapsed)}>{isCollapsed ? 'Show less' : 'Show more'}</button> : null}</div>
+                    {originalContent.length > maxLength ? <button className="ml-1 text-blue-600 transition hover:text-blue-400 focus:text-blue-500 focus:outline-none" onClick={() => setCollapsed(!isCollapsed)}>{isCollapsed ? 'Show less' : 'Show more'}</button> : null}</div>
             )
-        }
-
-        function openOptions() {
-            console.log("clicked");
         }
 
         return (
             <div className="">  
                 <div className="mb-40 ">
-                    <div className="bg-white p-4" id="cardHeader">
+                    <div className="p-4 bg-white" id="cardHeader">
                         <div className="flex">
                             <div className="flex items-center">
-                                <div className="w-10 h-10 font-bold text-center transition text-white bg-gray-700 bg-center mr-2 border-4 border-gray-500 rounded-full cursor-pointer select-none hover:opacity-80">
+                                <div className="w-10 h-10 mr-2 font-bold text-center text-white transition bg-gray-700 bg-center border-4 border-gray-500 rounded-full cursor-pointer select-none hover:opacity-80">
                                     <div className="my-1">?</div>
-                                    <span className="flex transition -my-4 mx-5 animate-bounce focus:opacity-50 focus:outline-none select-none"></span>
+                                    <span className="flex mx-5 -my-4 transition select-none animate-bounce focus:opacity-50 focus:outline-none"></span>
                                 </div>
 
                                 <div>
@@ -234,19 +226,19 @@ function Posts(props: PostProps) {
                                 </div>
                             </div>
 
-                            <div className="ml-auto flex items-start">
+                            <div className="flex items-start ml-auto">
 <MoreOptions isOwner={true}/>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white text-black" id="cardContent">
-                        <div className="pl-6 pr-6 pt-6 pb-3" id="cardContentItem">
+                    <div className="text-black bg-white" id="cardContent">
+                        <div className="pt-6 pb-3 pl-6 pr-6" id="cardContentItem">
                             <p className="text-sm antialiased break-words sm:subpixel-antialiased md:antialiased">
                                 ewewews
                             </p>
                         </div>
-                        <div className="pl-6 pr-6 pb-6 pt-3 flex flex-row-reverse" id="cardContentItem">
+                        <div className="flex flex-row-reverse pt-3 pb-6 pl-6 pr-6" id="cardContentItem">
                             <p className="text-xs text-gray-400 transition hover:text-gray-500">
                                 School '22, Studying Engineering 💻
                             </p>
@@ -254,16 +246,16 @@ function Posts(props: PostProps) {
                     </div>
 
                     <div
-                        className="bg-white text-black border-t border-gray-100 p-4"
+                        className="p-4 text-black bg-white border-t border-gray-100"
                         id="cardFooter"
                     >
-                        <div className="flex w-full justify-start">
+                        <div className="flex justify-start w-full">
                             <div className="flex flex-row-reverse">
                                 <div className="flex space-x-4">
                                     <div className="flex">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
-                                            className="h-5 w-5"
+                                            className="w-5 h-5"
                                             fill="none"
                                             viewBox="0 0 24 24"
                                             stroke="currentColor"
@@ -279,7 +271,7 @@ function Posts(props: PostProps) {
                                     <div className="flex">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
-                                            className="h-5 w-5"
+                                            className="w-5 h-5"
                                             fill="none"
                                             viewBox="0 0 24 24"
                                             stroke="currentColor"
@@ -295,11 +287,11 @@ function Posts(props: PostProps) {
                                 </div>
                             </div>
 
-                            <div className="flex justify-end w-full items-center">
+                            <div className="flex items-center justify-end w-full">
                                 <div>
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
-                                        className="h-5 w-5"
+                                        className="w-5 h-5"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -328,19 +320,19 @@ function Posts(props: PostProps) {
                     </IonRefresher>   </p>
                 <IonList>
                     {posts && posts.length > 0 && !loading ? allPosts.map((post: iPosts) =>
-                        <li key={post.PostId} className="bg-white px-4 py-6 shadow sm:p-6">
+                        <li key={post.PostId} className="px-4 py-6 bg-white shadow sm:p-6">
                             <div>
                                 <div className="flex space-x-3">
                                     <div className="flex-shrink-0">
-                                        <NavLink to={"/profile/" + post.PostedBy}><div className="w-10 h-10 font-bold text-center transition text-white bg-gray-700 bg-center mr-2 border-4 border-gray-500 rounded-full cursor-pointer select-none hover:opacity-80">
+                                        <NavLink to={"/profile/" + post.PostedBy}><div className="w-10 h-10 mr-2 font-bold text-center text-white transition bg-gray-700 bg-center border-4 border-gray-500 rounded-full cursor-pointer select-none hover:opacity-80">
                                             <div className="my-1">?</div>
-                                            <span className="flex transition -my-4 mx-5 animate-bounce focus:opacity-50 focus:outline-none select-none"></span>
+                                            <span className="flex mx-5 -my-4 transition select-none animate-bounce focus:opacity-50 focus:outline-none"></span>
                                         </div></NavLink></div>
-                                    <div className="min-w-0 flex-1">
+                                    <div className="flex-1 min-w-0">
                                         <p className="text-sm font-medium text-gray-900"><NavLink to={"/profile/" + post.PostedBy} className="hover:underline">{post.PostedBy}</NavLink></p>
-                                        <p className="text-sm text-gray-500"><a href="#" className="hover:underline"><time dateTime="2020-12-09T11:43:00">--</time></a></p>
+                                        <p className="text-sm text-gray-500"><a className="hover:underline"><time dateTime="2020-12-09T11:43:00">--</time></a></p>
                                     </div>
-                                    <div className="flex-shrink-0 self-center flex">
+                                    <div className="flex self-center flex-shrink-0">
                                         <div className="relative inline-block text-left">
                                             <div className="text-black">
                                                 ewewew
@@ -349,23 +341,23 @@ function Posts(props: PostProps) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="mt-6 text-gray-700 space-y-4 whitespace-pre-line text-sm antialiased break-words sm:subpixel-antialiased md:antialiased">
+                            <div className="mt-6 space-y-4 text-sm antialiased text-gray-700 break-words whitespace-pre-line sm:subpixel-antialiased md:antialiased">
                                 {trimText(post.PostBody)}
                             </div>
 
 
-                            <div className="flex w-full items-center">
+                            <div className="flex items-center w-full">
 
-                                <div className="flex justify-end ml-auto items-center">
+                                <div className="flex items-center justify-end ml-auto">
                                     <p className="text-xs text-gray-400 transition hover:text-gray-500">Bio goes here</p>
                                 </div>
                             </div>
 
-                            <div className="mt-6 flex flex-row-reverse justify-between">
+                            <div className="flex flex-row-reverse justify-between mt-6">
                                 <div className="flex space-x-6">
                                     <span className="inline-flex items-center text-sm">
                                         <button type="button" className="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5" aria-hidden="true">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5" aria-hidden="true">
                                                 <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path>
                                             </svg>
                                             <span className="font-medium text-gray-900">{post.Likes}</span><span className="sr-only">likes</span>
@@ -373,7 +365,7 @@ function Posts(props: PostProps) {
                                     </span>
                                     <span className="inline-flex items-center text-sm">
                                         <button type="button" className="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5" aria-hidden="true">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5" aria-hidden="true">
                                                 <path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clipRule="evenodd"></path>
                                             </svg>
                                             <span className="font-medium text-gray-900"></span><span className="sr-only">replies</span>
@@ -383,7 +375,7 @@ function Posts(props: PostProps) {
                                 <div className="flex text-sm">
                                     <span className="inline-flex items-center text-sm">
                                         <button type="button" className="inline-flex space-x-2 text-gray-400 hover:text-gray-500">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5" aria-hidden="true">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5" aria-hidden="true">
                                                 <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"></path>
                                             </svg>
                                         </button>

@@ -1,13 +1,6 @@
-import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonItemDivider, IonLabel, IonList, IonListHeader, IonLoading, IonModal, IonPage, IonText, IonTitle, IonToolbar, useIonAlert, useIonLoading, useIonRouter, useIonToast } from '@ionic/react';
-import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
-import { setLoginDetails } from '../../utils/Login';
-import API from '../../utils/API';
-import { Redirect, RouteComponentProps, useHistory } from 'react-router';
-import AuthContext from '../../AuthedContext';
-import React from 'react';
+import { IonButtons, IonContent, IonHeader, IonIcon, IonModal, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import styles from './NotLoggedInNav.module.css'; // Import css modules stylesheet as styles
-import { chevronBack, chevronDown, chevronUp } from 'ionicons/icons';
+import { chevronDown } from 'ionicons/icons';
 
 
 
@@ -55,9 +48,9 @@ function NotLoggedInNavTOS({ setShowTos, showTos }: any) {
       </IonHeader>
 
       <IonContent forceOverscroll={true} class={`${styles['modal-content']}`} >
-        <div className="flex flex-col space-y-6 p-6 text-white text-left tracking-wide leading-relaxed">
+        <div className="flex flex-col p-6 space-y-6 leading-relaxed tracking-wide text-left text-white">
           <div>
-            <p className="text-lg md:text-xl text-center lg:text-2xl mb-6">
+            <p className="mb-6 text-lg text-center md:text-xl lg:text-2xl">
               Please understand the following Terms of Service in which you are in agreement with by accessing or
               registering on Postogon.</p>
           </div>

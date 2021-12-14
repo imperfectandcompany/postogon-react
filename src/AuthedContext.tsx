@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { resolve } from 'path';
 import React, { useEffect } from 'react';
 import API from './utils/API';
 import { getToken } from './utils/Common';
-import { setLoginDetails, setUserToken } from './utils/Login';
+import { setLoginDetails } from './utils/Login';
 
 //create context
 export const Context = React.createContext<any>(undefined);

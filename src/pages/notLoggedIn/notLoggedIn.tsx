@@ -3,7 +3,6 @@ import { Redirect, Route, RouteComponentProps } from 'react-router';
 import NotLoggedInNav from './NotLoggedInNav';
 import NotLoggedInNavSignUp from './NotLoggedInNavSignUp';
 import NotLoggedInNavSignIn from './NotLoggedInNavSignIn';
-import PublicRoute from '../../utils/PublicRoute';
 
 
 
