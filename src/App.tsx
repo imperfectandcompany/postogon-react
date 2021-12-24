@@ -10,6 +10,13 @@ import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';
 import '@ionic/react/css/typography.css';
 
+/* Optional CSS utils that can be commented out */
+import '@ionic/react/css/padding.css';
+import '@ionic/react/css/float-elements.css';
+import '@ionic/react/css/text-alignment.css';
+import '@ionic/react/css/text-transformation.css';
+import '@ionic/react/css/flex-utils.css';
+import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
@@ -21,6 +28,11 @@ import NotLoggedIn from './pages/NotLoggedIn/NotLoggedIn';
 import AuthContext from './AuthedContext'
 import * as React from 'react'
 import { Loading } from './components/Loading/Loading';
+import { setupIonicReact } from '@ionic/react';
+import LoggedInTimeline from './pages/LoggedIn/LoggedInTimeline';
+
+setupIonicReact({
+});
 
 
 function App() {
@@ -61,6 +73,7 @@ function App() {
       (<IonReactRouter>
         <IonRouterOutlet>
           <Route path="/" component={LoggedIn} />
+          <Route render={() => <Redirect to="/home" />} exact={true} />
           <Route render={() => <Redirect to="/home"/>} />
         </IonRouterOutlet>
       </IonReactRouter>)

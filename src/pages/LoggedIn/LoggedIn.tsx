@@ -6,7 +6,6 @@ import LoggedInTimeline from './LoggedInTimeline';
 
 const LoggedIn: React.FC<RouteComponentProps> = ({ match }) => {
   return (
-    <IonPage>
               <IonTabs>
       <IonRouterOutlet>
       <Route exact path="/:tab(home)" component={LoggedInTimeline} />
@@ -22,7 +21,6 @@ const LoggedIn: React.FC<RouteComponentProps> = ({ match }) => {
                 </IonTabButton>
             </IonTabBar>
       </IonTabs>
-      </IonPage>
   );
 };
 

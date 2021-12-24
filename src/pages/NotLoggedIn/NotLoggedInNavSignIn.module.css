@@ -13,7 +13,6 @@
 .toasts{
   --background:white !important;
   --button-color:#FF8744 !important;
-  --color:#FF8744 !important;
 }
 
 
@@ -22,16 +21,31 @@
 }
 
 ion-input{
-  border-color: rgba(0, 0, 0, 0);
-	background-color: rgba(0, 0, 0, 0);
-	color: white; 
-  --background: rgba(0, 0, 0, 0) !important;
-  }
+	color: #cf6830 !important; 
+  font-weight: 700;
+}
 
-.inputs {
-	border-color: rgba(0, 0, 0, 0);
-	background-color: rgba(0, 0, 0, 0);
-	color: white; 
+
+.input-clear-icon.sc-ion-input-md,
+.input-clear-icon.sc-ion-input-ios  {
+  background-image: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><polygon fill='white' points='405,136.798 375.202,107 256,226.202 136.798,107 107,136.798 226.202,256 107,375.202 136.798,405 256,285.798 375.202,405 405,375.202 285.798,256'/></svg>") !important;
+  width: 30px;
+  height: 30px;
+  background-size: 22px;
+}
+
+
+ion-item {
+  color: white !important; 
+	--background:transparent !important;
+  --highlight-color-focused: #b85e2e !important;
+  --background-focused-opacity: 0% !important; 	
+  --border-color: #b85e2e !important;
+  --background-hover-opacity: 0% !important; 
+
+  --background-focused: transparent !important; 	
+
+  --background-activated-opacity: 0% !important; 
 }
 
 .toolbar {

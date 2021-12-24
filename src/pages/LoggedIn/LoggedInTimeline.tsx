@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/react';
 import { useState } from 'react';
 import Posts from '../../components/Feed/Posts';
 

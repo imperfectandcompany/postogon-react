@@ -11,8 +11,8 @@ const Sections = [
   { heading: 'Acceptance', description: 'You hereby agree that by accepting this TOS, you know that your contract with Postogon also correlates any service that is owned by us.' },
 ];
 
-const listSections = Sections.map((section) =>
-<div className="space-y-2 text-white">
+const listSections = Sections.map((section, index) =>
+<div key={"listItem"+index+1} className="space-y-2 text-white">
 <div className="text-xl font-semibold md:text-xlg lg:text-3xl">
 <IonText>
 <h1>{section.heading}</h1>
@@ -36,7 +36,7 @@ function NotLoggedInNavTOS({ setShowTos, showTos }: any) {
 
   return (
 
-    <IonModal isOpen={showTos} swipeToClose={true} cssClass={`${styles.modal}`} onDidDismiss={() => setShowTos(false)} >
+    <IonModal isOpen={showTos} swipeToClose={true}  className={`${styles.modal}`} onDidDismiss={() => setShowTos(false)} >
 
       <IonHeader collapse="condense">
         <IonToolbar className={`${styles['modal-toolbar']}`}>

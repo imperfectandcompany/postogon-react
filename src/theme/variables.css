@@ -116,6 +116,44 @@ body ion-content {
   font-size: 1.25rem;
 }
 
+/* like button */
+@keyframes fadeOutTopRight {
+  from {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    -webkit-transform: translate3d(100%, -100%, 0);
+    transform: translate3d(100%, -100%, 0);
+  }
+}
+
+
+.animate__fadeOutTopRight {
+  -webkit-animation-name: fadeOutTopRight;
+  animation-name: fadeOutTopRight;
+}
+
+.animate__animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-duration: var(--animate-duration);
+  animation-duration: var(--animate-duration);
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+
+.input-clear-icon.sc-ion-input-md,
+.input-clear-icon.sc-ion-input-ios  {
+  background-image: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><polygon fill='white' points='405,136.798 375.202,107 256,226.202 136.798,107 107,136.798 226.202,256 107,375.202 136.798,405 256,285.798 375.202,405 405,375.202 285.798,256'/></svg>") !important;
+  width: 30px;
+  height: 30px;
+}
+
+
 .ion-color-white {
   --ion-color-base: var(--ion-color-white);
   --ion-color-base-rgb: var(--ion-color-white-rgb);
