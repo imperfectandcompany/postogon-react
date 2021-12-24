@@ -1,5 +1,5 @@
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet } from '@ionic/react';
+import { IonApp, IonRouterOutlet, useIonToast } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
 /* Core CSS required for Ionic components to work properly */
@@ -29,7 +29,6 @@ import AuthContext from './AuthedContext'
 import * as React from 'react'
 import { Loading } from './components/Loading/Loading';
 import { setupIonicReact } from '@ionic/react';
-import LoggedInTimeline from './pages/LoggedIn/LoggedInTimeline';
 
 setupIonicReact({
 });
@@ -46,7 +45,7 @@ function App() {
     if (!token) {
       return;
     }
-    let result = verify();
+    let result = verify;
     if (result) {
       setAuthLoading(false);
       console.log("account verified");
@@ -54,10 +53,10 @@ function App() {
       setAuthLoading(false);
       console.log("account unverified");
     }
-  }, []);
+  }, [verify]);
 
   if (authLoading && getToken()) {
-    return (
+    return(
       <Loading></Loading>
     );
   }
@@ -73,7 +72,6 @@ function App() {
       (<IonReactRouter>
         <IonRouterOutlet>
           <Route path="/" component={LoggedIn} />
-          <Route render={() => <Redirect to="/home" />} exact={true} />
           <Route render={() => <Redirect to="/home"/>} />
         </IonRouterOutlet>
       </IonReactRouter>)

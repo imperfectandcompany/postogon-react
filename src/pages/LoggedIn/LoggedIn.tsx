@@ -1,11 +1,16 @@
-import { IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react';
+import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react';
+import { home, person } from 'ionicons/icons';
 import { Redirect, Route, RouteComponentProps } from 'react-router';
+import { usePathname } from '../../utils/Common';
+import HomeMenu from './HomeMenu/HomeMenu';
 import LoggedInTimeline from './LoggedInTimeline';
 
 
 
 const LoggedIn: React.FC<RouteComponentProps> = ({ match }) => {
-  return (
+    console.log(usePathname());
+    return (<>
+        <HomeMenu></HomeMenu>
               <IonTabs>
       <IonRouterOutlet>
       <Route exact path="/:tab(home)" component={LoggedInTimeline} />
@@ -14,13 +19,15 @@ const LoggedIn: React.FC<RouteComponentProps> = ({ match }) => {
       </IonRouterOutlet>
       <IonTabBar slot='bottom'>
                 <IonTabButton tab='home' href='/home'>
+                    <IonIcon icon={home}></IonIcon>
                     <IonLabel>Home</IonLabel>
                 </IonTabButton>
                 <IonTabButton tab='profile' href='/profile'>
+                <IonIcon icon={person}></IonIcon>
                     <IonLabel>Profile</IonLabel>
                 </IonTabButton>
             </IonTabBar>
-      </IonTabs>
+      </IonTabs></>
   );
 };
 

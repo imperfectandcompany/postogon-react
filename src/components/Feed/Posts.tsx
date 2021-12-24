@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { getToken } from '../../utils/Common';
 import { RefresherEventDetail } from '@ionic/core';
-import MoreOptions from './MoreOptions';
-import { useIonViewWillEnter, IonRefresher, IonRefresherContent, IonList, IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/react';
-import Post from '../Timeline/Post';
+import { useIonViewWillEnter, IonRefresher, IonRefresherContent, IonList, IonInfiniteScroll, IonInfiniteScrollContent, IonContent } from '@ionic/react';
 import SinglePost from './Post/SinglePost';
 
 interface PostProps {
@@ -207,12 +205,11 @@ function Posts(props: PostProps) {
 
 
 
-                <p>
-                    <IonRefresher className="" slot="fixed" onIonRefresh={doRefresh}>
-                        <IonRefresherContent
-                        >
-                        </IonRefresherContent>
-                    </IonRefresher>   </p>
+      <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
+        <IonRefresherContent
+          refreshingSpinner="dots">
+        </IonRefresherContent>
+      </IonRefresher>
                 <IonList>
                     {posts && posts.length > 0 && !loading ? allPosts.map((post: iPosts) =>
                         <li key={post.PostId} className="px-4 py-6 bg-white shadow sm:p-6">

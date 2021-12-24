@@ -1,44 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { NavLink, useParams } from 'react-router-dom';
-import { getToken } from '../../../utils/Common';
-import { HTMLStencilElement, RefresherEventDetail } from '@ionic/core';
+import React, { useRef, useState } from 'react';
 import MoreOptions from '../MoreOptions';
-import { useIonViewWillEnter, IonRefresher, IonRefresherContent, IonList, IonInfiniteScroll, IonInfiniteScrollContent, IonIcon, IonButton } from '@ionic/react';
 import { heart, heartOutline } from 'ionicons/icons';
-import { addToLikes, LikesStore } from '../../../data/LikesStore';
-import { fetchPosts } from '../../../utils/feed';
-import { PostsStore } from '../../../data/PostsStore';
+import { IonIcon } from '@ionic/react';
+
 
 
 
 function SinglePost() {
-    const params = useParams();
     const [ IsLiked, setIsLiked ] = useState(false);
     const postLikeRef = useRef<HTMLDivElement>(null);
-    const likes = LikesStore.useState(s => s.post_ids);
-    const posts = PostsStore.useState(s => s.posts);
-
-
-	useEffect(() => {
-
-		fetchPosts();
-	}, []);
+    //implement a check to see if user owns the post...
 
     const AddPostToLikes = ( e: React.MouseEvent<HTMLIonIconElement, MouseEvent>, feed:string, postID:string,) => {
         e.preventDefault();
         e.stopPropagation();
-        addToLikes(feed, postID);
+        //add post like to backend...
         if (null !== postLikeRef.current) {
             setIsLiked(IsLiked ? false : true);
         postLikeRef.current.style.display = "";
         postLikeRef.current.classList.add("animate__fadeOutTopRight");
         }
-        setTimeout(() => {
-            if (null !== postLikeRef.current) {
-            postLikeRef.current.classList.remove("animate__fadeOutTopRight");
-            postLikeRef.current.style.display = "none";  
-            }          
-        }, 500);
     }
 
 
@@ -51,8 +32,8 @@ function SinglePost() {
                     <div className="p-4 bg-white" id="cardHeader">
                         <div className="flex">
                             <div className="flex items-center">
-                                <div className="w-10 h-10 mr-2 font-bold text-center text-white transition bg-gray-700 bg-center border-4 border-gray-500 rounded-full cursor-pointer select-none hover:opacity-80">
-                                    <div className="my-1">?</div>
+                                <div className="w-10 h-10 mr-2 text-center text-white transition bg-gray-700 bg-center border-4 border-gray-500 rounded-full cursor-pointer select-none hover:opacity-80">
+                                    <div className=""></div>
                                     <span className="flex mx-5 -my-4 transition select-none animate-bounce focus:opacity-50 focus:outline-none"></span>
                                 </div>
 
@@ -73,7 +54,7 @@ function SinglePost() {
                             </div>
 
                             <div className="flex items-start ml-auto">
-                                <MoreOptions isOwner={true} />
+                                <MoreOptions isOwner={false} />
                             </div>
                         </div>
                     </div>
@@ -136,7 +117,7 @@ function SinglePost() {
                             <div className="flex items-center justify-end w-full">
                                 <div>
                                     <IonIcon  color={ IsLiked ? "danger" : "medium" } icon={ IsLiked ? heart : heartOutline } onClick={ (e) => AddPostToLikes(e, "public", "4") } />
-                                    <div ref={ postLikeRef }  ><IonIcon style={{ position: "absolute", display: "none" }} className={ `animate__animated` } color="danger" icon={ heart } /></div>
+                                    <div ref={ postLikeRef } className={ `animate__animated` } ><IonIcon style={{ position: "absolute", display: "none" }}  color="danger" icon={ heart } /></div>
                                 </div>
                                 <div>
                                 </div>

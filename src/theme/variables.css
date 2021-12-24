@@ -10,6 +10,11 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-primary-shade: #3171e0;
   --ion-color-primary-tint: #4c8dff;
 
+    /** animate **/
+    --animate-duration: 1s;
+    --animate-delay: 1s;
+    --animate-repeat: 1;
+
     /** primary **/
     --ion-color-white: #ffffff;
     --ion-color-white-rgb: 255,255,255;

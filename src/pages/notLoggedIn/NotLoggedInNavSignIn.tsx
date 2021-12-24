@@ -46,16 +46,6 @@ function NotLoggedInNavSignIn() {
       }
     }
     setLoading(false);
-    present({
-      keyboardClose: true,
-      translucent: true,
-      duration:1000,
-      icon:informationCircle,
-      cssClass: styles.toasts,
-      buttons: [{ text: 'OK', handler: () => dismiss(), cssClass: styles.toasts }],
-      message: "Something went wrong. Please try again.",
-    })
-
   }
 
 
