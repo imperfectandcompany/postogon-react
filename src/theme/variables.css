@@ -121,6 +121,13 @@ body ion-content {
   font-size: 1.25rem;
 }
 
+/* weird ios button render bug */
+ion-button[type=submit] {
+  appearance:         none;
+  -moz-appearance:    none;
+  -webkit-appearance: none;
+}
+
 /* like button */
 @keyframes fadeOutTopRight {
   from {

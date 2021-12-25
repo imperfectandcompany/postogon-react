@@ -9,7 +9,8 @@
   overflow: hidden;
 }
 
-.bg::before {    
+@media only screen and (min-width: 768px) {
+  .bg::before {    
   content: "";
   width: 100%;
   top: 0px;
@@ -22,11 +23,45 @@
   background-size: cover;
   position: absolute;
   background-image: url("./images/selfie.png");	
+  }
+}
+
+:root {
+  --animate-duration: 1s;
+  --animate-delay: 1s;
+  --animate-repeat: 1;
+}
+
+
+/* Fading entrances  */
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.25;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.25;
+  }
 }
 
 @media only screen and (max-width: 768px) {
   /* For mobile phones: */
   .bg::before {    
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-duration: var(--animate-duration);
+    animation-duration: var(--animate-duration);
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;    
     content: "";
     opacity: 0.25;
     width:1600px;
@@ -37,6 +72,8 @@
     background-image: url("./images/selfie.png");
     	background-repeat:no-repeat;
     background-size:cover;
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;    
   }
 }
 

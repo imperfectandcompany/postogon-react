@@ -48,7 +48,7 @@ function NotLoggedInNavTOS({ setShowTos, showTos }: any) {
       </IonHeader>
 
       <IonContent forceOverscroll={true} class={`${styles['modal-content']}`} >
-        <div className="flex flex-col p-6 space-y-6 leading-relaxed tracking-wide text-left text-white">
+        <div className="flex flex-col p-6 mb-24 space-y-6 leading-relaxed tracking-wide text-left text-white">
           <div>
             <p className="mb-6 text-lg text-center md:text-xl lg:text-2xl">
               Please understand the following Terms of Service in which you are in agreement with by accessing or
