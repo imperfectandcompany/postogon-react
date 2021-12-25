@@ -16,7 +16,8 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     const [authValues, setAuthValues] = React.useState({
         authenticated: false,
-        user: null,
+        uid: null,
+        username: null,
     });
 
     useEffect(() => {
@@ -31,7 +32,8 @@ export const AuthProvider: React.FC = ({ children }) => {
                 setLoginDetails(JSON.stringify(response.data));
                 setAuthValues({
                     authenticated: true,
-                    user: details['Uid'],
+                    uid: details['Uid'],
+                    username: details['username']
                 });
                 resolve(true);
             }).catch(error => {
@@ -52,13 +54,15 @@ export const AuthProvider: React.FC = ({ children }) => {
                 setLoginDetails(JSON.stringify(response.data));
                 setAuthValues({
                     authenticated: true,
-                    user: details['Uid'],
+                    uid: details['Uid'],
+                    username: details['username']
                 });
                 resolve(true);
             }).catch(error => {
                 setAuthValues({
                     authenticated: false,
-                    user: null,
+                    uid: null,
+                    username: null,
                 });
                 resolve(false);
             });
@@ -69,7 +73,8 @@ export const AuthProvider: React.FC = ({ children }) => {
     const logout = () => {
         setAuthValues({
             authenticated: false,
-            user: null,
+            uid: null,
+            username: null,
         });
         return Promise.resolve(true);
     };

@@ -14,7 +14,6 @@ ion-item ion-label {
     height: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
 }
 .menu-layout ion-col:first-child {
     background: var(--ion-color-light);

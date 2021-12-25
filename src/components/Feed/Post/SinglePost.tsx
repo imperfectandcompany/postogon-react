@@ -15,11 +15,8 @@ function SinglePost() {
         e.preventDefault();
         e.stopPropagation();
         //add post like to backend...
-        if (null !== postLikeRef.current) {
+
             setIsLiked(IsLiked ? false : true);
-        postLikeRef.current.style.display = "";
-        postLikeRef.current.classList.add("animate__fadeOutTopRight");
-        }
     }
 
 
@@ -114,11 +111,9 @@ function SinglePost() {
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-end w-full">
-                                <div>
+                            <div className="flex items-center justify-end w-full ">
                                     <IonIcon  color={ IsLiked ? "danger" : "medium" } icon={ IsLiked ? heart : heartOutline } onClick={ (e) => AddPostToLikes(e, "public", "4") } />
-                                    <div ref={ postLikeRef } className={ `animate__animated` } ><IonIcon style={{ position: "absolute", display: "none" }}  color="danger" icon={ heart } /></div>
-                                </div>
+                                    {IsLiked ? <IonIcon color="danger" style={{position:"absolute"}} className="animate__animated animate__fadeOutTopRight" icon={heart}/>: null}
                                 <div>
                                 </div>
                             </div>

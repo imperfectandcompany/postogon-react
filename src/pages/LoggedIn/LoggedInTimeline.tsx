@@ -15,14 +15,14 @@ const LoggedInTimeline: React.FC = () => {
     <IonPage id="main-content">
       <IonHeader class="ion-no-border">
         <IonToolbar >
-        <IonMenuButton menu="first" autoHide={false}>
-        <IonButton color="black" size="small" slot="start">
+        <IonMenuToggle menu="first" autoHide={false}>
+        <IonButton color="transparent" size="small">
         <img
              className="w-6 motion-reduce:animate-spin" 
              src={process.env.PUBLIC_URL + '/assets/icon/icon.svg'}
              alt="postogon logo"/>
               </IonButton>
-              </IonMenuButton>
+              </IonMenuToggle>
 
               <IonTitle>Postogon</IonTitle>
               <IonButton color="black" size="small" slot="end">

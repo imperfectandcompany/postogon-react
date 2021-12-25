@@ -15,7 +15,6 @@ function NotLoggedInNavSignIn() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [attempts, setAttempts] = useState(0);
   const [present, dismiss] = useIonToast();
-  const passwordInput = React.useRef(null);
   const [passwordfocused, setPasswordFocused] = useState<boolean>(false);
 
   const { login } = React.useContext(AuthContext);
@@ -104,7 +103,7 @@ function togglePassword(){
             <IonInput onIonFocus={()=>setPasswordFocused(true)} onIonBlur={()=>setPasswordFocused(false)} id="passwordEnter" class="passwordEnter" autocomplete="current-password" clearOnEdit={true} inputmode="text" enterkeyhint="go" type={showPassword ? 'text': 'password'} value={password} onIonChange={e => setPassword(e.detail.value!)} required
 ></IonInput>
 {passwordfocused ? 
-<IonIcon slot="end" className="cursor-pointer select-none  focus:select-none hover:text-gray-200 focus:text-gray-600 focus:text-opacity-50" onClick={()=>togglePassword()} icon={showPassword ? eyeOff : eye}/>
+<IonIcon slot="end" className="cursor-pointer select-none animate__animated animate__fadeIn focus:select-none hover:text-gray-200 focus:text-gray-600 focus:text-opacity-50" onClick={()=>togglePassword()} icon={showPassword ? eyeOff : eye}/>
 : null}
           </IonItem>
             <IonButton type="submit" size="large"
