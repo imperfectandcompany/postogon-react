@@ -1,4 +1,5 @@
-import { IonActionSheet } from '@ionic/react';
+import { IonActionSheet, IonButton, IonIcon } from '@ionic/react';
+import { ellipsisHorizontal, ellipsisVertical } from 'ionicons/icons';
 import { useState } from 'react';
 
 interface MoreOptionsProps{
@@ -19,14 +20,12 @@ function MoreOptions(props:MoreOptionsProps) {
 
 
     return (
-          <><button
+          <><IonButton fill="clear" color="light"
           className="overflow-hidden focus:outline-none"
           onClick={() => returnOptions()}
         >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 leading-none text-gray-500 cursor-pointer fill-current hover:text-gray-700 focus:text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-</svg>
-            </button>
+        <IonIcon icon={ellipsisHorizontal} size="small" slot="end"></IonIcon>
+            </IonButton>
             <IonActionSheet
             translucent={true}
 isOpen={showOwnerActionSheet}
