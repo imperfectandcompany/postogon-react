@@ -5,6 +5,7 @@
   "dependencies": {
     "@ionic/react": "^6.0.1",
     "@ionic/react-router": "^6.0.1",
+    "@reduxjs/toolkit": "^1.7.1",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -12,6 +13,7 @@
     "@types/node": "^12.19.15",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^16.9.10",
+    "@types/react-redux": "^7.1.21",
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
     "animate.css": "^4.1.1",
@@ -20,6 +22,7 @@
     "pullstate": "^1.23.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-redux": "^7.2.6",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "5.0.0",

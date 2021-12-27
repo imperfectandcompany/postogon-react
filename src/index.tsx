@@ -4,11 +4,19 @@ import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './AuthedContext';
-
+import { Provider } from 'react-redux';
+import {store} from './app/store';
+/*
+AuthProvider helps us manage and authenticate users
+Provider Store provides us access to our store
+for our react components.
+*/
 ReactDOM.render(
   <React.StrictMode>
     <AuthProvider>
-    <App />
+      <Provider store={store}>
+        <App />
+        </Provider>
     </AuthProvider>
   </React.StrictMode>,
   document.getElementById('root')

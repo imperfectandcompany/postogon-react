@@ -1,6 +1,6 @@
 import { IonActionSheet, IonButton, IonIcon } from '@ionic/react';
 import { ellipsisHorizontal, ellipsisVertical } from 'ionicons/icons';
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 
 interface MoreOptionsProps{
     isOwner:boolean;
@@ -9,7 +9,10 @@ interface MoreOptionsProps{
 function MoreOptions(props:MoreOptionsProps) {
     const [showOwnerActionSheet, setShowOwnerActionSheet] = useState(false);
     const [showUserActionSheet, setShowUserActionSheet] = useState(false);
-    function returnOptions(){
+
+
+    function returnOptions(e: MouseEvent<HTMLIonButtonElement, globalThis.MouseEvent>){
+      e.stopPropagation();
       if(props.isOwner){
         setShowOwnerActionSheet(true);
       } else {
@@ -22,7 +25,7 @@ function MoreOptions(props:MoreOptionsProps) {
     return (
           <><IonButton fill="clear" color="light"
           className="overflow-hidden focus:outline-none"
-          onClick={() => returnOptions()}
+          onClick={(e) => returnOptions(e)}
         >
         <IonIcon icon={ellipsisHorizontal} size="small" slot="end"></IonIcon>
             </IonButton>

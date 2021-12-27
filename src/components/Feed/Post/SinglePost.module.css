@@ -19,7 +19,6 @@
 .post-footer {
     align-content: center;
     width: 100%;
-    border-bottom: 1px solid rgb(245, 245, 245);
 }
 
 .post-category {
@@ -33,5 +32,4 @@
 .removeBorderRadius {
 border-radius: 0px;
 box-shadow: none !important;
-
 }

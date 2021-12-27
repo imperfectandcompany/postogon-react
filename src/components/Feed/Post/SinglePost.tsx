@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import MoreOptions from '../MoreOptions';
 import { bookmarkOutline, chatbubbleEllipses, chatbubbleOutline, chatbubblesOutline, ellipseOutline, ellipsisHorizontal, ellipsisVertical, ellipsisVerticalCircle, ellipsisVerticalSharp, heart, heartOutline, optionsOutline, paperPlaneOutline, reload, sendOutline, shareOutline } from 'ionicons/icons';
-import { IonAvatar, IonBadge, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonFooter, IonHeader, IonIcon, IonItem, IonLabel, IonNote, IonRow, IonText, IonThumbnail } from '@ionic/react';
+import { IonAvatar, IonBadge, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonItem, IonLabel, IonModal, IonNote, IonRow, IonText, IonThumbnail, IonTitle, IonToolbar } from '@ionic/react';
 import styles from "./SinglePost.module.css"; // Import css modules stylesheet as styles
 
 interface iPosts {
@@ -14,16 +14,16 @@ interface iPosts {
 }
 
 function SinglePost(props:iPosts) {
-    const [IsLiked, setIsLiked] = useState(false);
+    const [isLiked, setIsLiked] = useState(false);
+    const [viewMoreDetails, setViewMoreDetails] = useState(false);
     const postLikeRef = useRef<HTMLDivElement>(null);
     //implement a check to see if user owns the post...
 
     const AddPostToLikes = (e: React.MouseEvent<HTMLIonIconElement, MouseEvent> | React.MouseEvent<HTMLIonButtonElement, MouseEvent>, feed: string, postID: string,) => {
-        e.preventDefault();
         e.stopPropagation();
         //add post like to backend...
 
-        setIsLiked(IsLiked ? false : true);
+        setIsLiked(isLiked ? false : true);
     }
 
 
@@ -33,20 +33,22 @@ function SinglePost(props:iPosts) {
         const maxLength = 140;
         const originalContent = text.trim();
         const content = originalContent.slice(0, maxLength);
-
         return (
-
             <div>
                 <span className="whitespace-pre-line">{isCollapsed ? originalContent : content}</span>
                 {originalContent.length > maxLength ? <button className="pl-1 text-blue-600 transition hover:text-blue-400 focus:text-blue-500 focus:outline-none" onClick={() => setCollapsed(!isCollapsed)}>{isCollapsed ? 'Show less' : 'Show more'}</button> : null}</div>
         )
     }
 
+    function viewMoreDetailsHandler(e: React.MouseEvent<HTMLIonButtonElement, MouseEvent>){
+        e.stopPropagation();
+        setViewMoreDetails(false)
+    }
 
-    return (
-        <React.Fragment>
-            <IonCard class={`${styles['removeBorderRadius']}` +" ion-no-margin"}>
-                <div className="bg-white">
+    const renderCard = () => {
+        return(
+            <IonCard button={!viewMoreDetails} onClick={()=>(setViewMoreDetails(true))} class={`${styles['removeBorderRadius']}` +" ion-no-margin"}>
+                <div className="bg-gray-50">
                     <IonHeader>
                         <IonItem lines="none">
                             <IonAvatar slot="start">
@@ -62,9 +64,7 @@ function SinglePost(props:iPosts) {
                     </IonHeader>
                     <IonCardContent>
                         <div className={`${styles['post-content']}` + " antialiased text-gray-900 sm:subpixel-antialiased md:antialiased"}>
-                            <p>
                             {trimText(`${props.PostBody}`)}
-                            </p>
 
                             <IonRow className="justify-end">
                                 <IonNote className="mt-3 text-xs text-gray-400 transition hover:text-gray-500">School '22, Studying Engineering 💻</IonNote>
@@ -74,7 +74,7 @@ function SinglePost(props:iPosts) {
                     <IonFooter>
                         
                     <div className={`${styles['post-footer']}`}>
-                        <IonRow className="bg-white ion-align-self-center ion-justify-content-between">
+                        <IonRow className="ion-align-self-center ion-justify-content-between">
                             <div>
                             <IonButton fill="clear"  color="medium">
                                     <IonIcon icon={bookmarkOutline} />
@@ -88,9 +88,9 @@ function SinglePost(props:iPosts) {
                                 <IonButton fill="clear"  color="medium">
                                     <IonIcon icon={chatbubblesOutline} />
                                 </IonButton>
-                                <IonButton fill="clear" color={IsLiked ? "danger" : "medium"} onClick={(e) => AddPostToLikes(e, "public", "4")}>
-                                <IonIcon icon={IsLiked ? heart : heartOutline} />
-                                {IsLiked ? <IonIcon color="danger" style={{ position: "absolute", display: `${IsLiked ? "" : "none"}` }} className="animate__animated animate__fadeOutTopRight" icon={heart} /> : null}
+                                <IonButton fill="clear" color={isLiked ? "danger" : "medium"} onClick={(e) => AddPostToLikes(e, "public", "4")}>
+                                <IonIcon icon={isLiked ? heart : heartOutline} />
+                                {isLiked ? <IonIcon color="danger" style={{ position: "absolute", display: `${isLiked ? "" : "none"}` }} className="animate__animated animate__fadeOutTopRight" icon={heart} /> : null}
                             </IonButton>                                
                             </div>                            
                         </IonRow>
@@ -98,8 +98,33 @@ function SinglePost(props:iPosts) {
                 </IonFooter>
                 </div>
                 </IonCard>
+        );
+    }
+    
+    
+    return (
+        <React.Fragment>
+      {/* Card Modal */}
+      <IonModal
+        onDidDismiss={() => setViewMoreDetails(false)}
+        isOpen={viewMoreDetails}
+        swipeToClose={true}
+      >
+<IonHeader collapse="condense">
+        <IonToolbar color="light">
+          <IonTitle>Comments</IonTitle>
+          <IonButton color="transparent" slot="end" onClick={(e) => viewMoreDetailsHandler(e)}>
+<IonText color="primary">Close</IonText>
+          </IonButton>
+        </IonToolbar>
+      </IonHeader>
+        <IonContent color="dark">
+        {renderCard()}
+ </IonContent>
+      </IonModal>
 
-
+      
+            {renderCard()}
         </React.Fragment>
     );
 }

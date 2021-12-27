@@ -1,5 +1,5 @@
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonMenuToggle, IonItem, IonList, IonMenu, IonRouterOutlet, IonCol, IonLabel, IonRow, IonThumbnail } from '@ionic/react';
-import { addOutline, searchOutline } from 'ionicons/icons';
+import { addOutline, helpCircleOutline, logOutOutline, peopleOutline, personAddOutline, searchOutline, settingsOutline } from 'ionicons/icons';
 import React from 'react';
 import { useState } from 'react';
 import AuthContext from '../../../AuthedContext'
@@ -44,23 +44,23 @@ const HomeMenu: React.FC = () => {
             </IonLabel>
           </IonItem>
           <IonItem lines="none">
-            <IonIcon slot="start" name="people-outline" size="small"></IonIcon>
+            <IonIcon slot="start" icon={peopleOutline} size="small"></IonIcon>
             <IonLabel>People</IonLabel>
           </IonItem>
           <IonItem lines="none">
-            <IonIcon slot="start" name="person-add-outline" size="small"></IonIcon>
+            <IonIcon slot="start" icon={personAddOutline} size="small"></IonIcon>
             <IonLabel>Invite people</IonLabel>
           </IonItem>
           <IonItem lines="full">
-            <IonIcon slot="start" name="help-circle-outline" size="small"></IonIcon>
+            <IonIcon slot="start" icon={helpCircleOutline} size="small"></IonIcon>
             <IonLabel>Help</IonLabel>
           </IonItem>
           <IonItem lines="none">
-            <IonIcon slot="start" name="settings-outline" size="small"></IonIcon>
+            <IonIcon slot="start" icon={settingsOutline} size="small"></IonIcon>
             <IonLabel>Preferences</IonLabel>
           </IonItem>
           <IonItem lines="full">
-          <IonIcon slot="start" name="log-out-outline" size="small"></IonIcon>
+          <IonIcon slot="start" icon={logOutOutline} size="small"></IonIcon>
             <IonLabel>Sign out</IonLabel>
           </IonItem>
           <IonItem lines="none" href="https://imperfectandcompany.com" target="_blank" rel="noreferrer noopener">

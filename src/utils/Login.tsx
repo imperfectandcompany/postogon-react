@@ -21,4 +21,6 @@
     export const setLoginDetails = async (data: string) => {
       const userDetails = JSON.parse(data);
       await setUserToken(userDetails['Token']);
+      console.log(userDetails['Uid']);
+      await setUserSession(userDetails['Uid'], userDetails['Username'], userDetails['Email']);
     }
