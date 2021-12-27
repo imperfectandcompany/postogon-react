@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { getToken } from '../../utils/Common';
 import { RefresherEventDetail } from '@ionic/core';
@@ -6,6 +6,11 @@ import { useIonViewWillEnter, IonRefresher, IonRefresherContent, IonList, IonInf
 import SinglePost from './Post/SinglePost';
 import skeletonPost from './skeletonPost';
 import PostLike from '../../features/post/postLike';
+import { ActionCreator, ThunkAction } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { useCheckIfUserExistsByUsernameQuery } from '../../app/services/postogon';
+import { useSelector } from 'react-redux';
+
 
 interface PostProps {
     feed: string;
@@ -14,8 +19,9 @@ interface PostProps {
     id?: string;
 }
 
-
 function Posts(props: PostProps) {
+
+
 
 
     const [loading, setLoading] = useState(true);
@@ -139,7 +145,6 @@ function Posts(props: PostProps) {
             PostBody: string;
             PostedBy: string;
             Likes: number;
-            To_Whom: number;
         }
 
         return (
@@ -172,7 +177,7 @@ function Posts(props: PostProps) {
 
     return (
         <React.Fragment>
-            <div>dfa
+            <div>
                 <PostLike></PostLike>
                 <ul>
                     {RenderPosts()}
