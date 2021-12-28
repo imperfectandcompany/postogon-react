@@ -10,54 +10,30 @@ import { ActionCreator, ThunkAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { useCheckIfUserExistsByUsernameQuery } from '../../app/services/postogon';
 import { useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { fetchPosts, fetchPostsFeed, fetchPostsType, initialState, IPost, loadInitialPosts, setLastPosition, updatePosts } from '../../features/post/postSlice';
 
 
 interface PostProps {
-    feed: string;
-    type: string;
+    feed: fetchPostsFeed;
+    type: fetchPostsType;
     username?: string;
     id?: string;
 }
 
 function Posts(props: PostProps) {
 
-
-
-
     const [loading, setLoading] = useState(true);
-    const [posts, setData] = useState([]);
-    const [allPosts, setAllPosts] = useState([]);
-    const perPage = 8;
-    const [lastPosition, setLastPosition] = useState(perPage);
+    const {posts, isLoading, loadedPosts, lastPosition, perPage} = useAppSelector(state => state.post);
+    const [allPosts, setAllPosts] = useState(initialState.posts);
     const [isInfiniteDisabled, setInfiniteDisabled] = useState(false);
 
-    const getData = async () => {
-        const token = getToken();
-        if (props.type ==="timeline") {
-            const response = await fetch(`https://api.postogon.com/posts/public?token=${token}&feed=${props.feed}`);
-            const newData = await response.json();
-            setData(newData);
-            setAllPosts(newData.slice(0, perPage));
-        } else if (props.type === "profile") {
-            const response = await fetch(`https://api.postogon.com/profile?username=${props.username}&feed=${props.feed}`);
-            const newData = await response.json();
-            setData(newData);
-            setAllPosts(newData.slice(0, perPage));
-        }
-        else if (props.type === "id") {
-            const response = await fetch(`https://api.postogon.com/posts?id=${props.id}`);
-            const newData = await response.json();
-            setData(newData);
-            setAllPosts(newData.slice(0, perPage));
-        }
-    };
 
-    useEffect(() => {
-        getData();
-    }, [props.feed]);
+    const dispatch = useAppDispatch()
 
 
-    const refreshData = async () => {
+    
+  /*  const refreshData = async () => {
         const token = getToken();
         if (props.type === "timeline") {
             const response = await fetch(`https://api.postogon.com/posts/public?token=${token}&feed=${props.feed}`);
@@ -76,22 +52,37 @@ function Posts(props: PostProps) {
             setData(newData);
             setAllPosts(newData.slice(0, perPage));
         }
-    }
+    } */
+
+
+    const getData = async () => {
+        //get posts based on type and feed
+        dispatch(fetchPosts(props.type, props.feed));
+        //load first page of posts
+        dispatch(loadInitialPosts);
+        console.log(loadedPosts);
+    };
 
     useIonViewWillEnter(() => {
         loadPosts();
     });
 
+    
+    useEffect(() => {
+        getData();
+    }, [props.feed]);
+   
+
     function doRefresh(event: CustomEvent<RefresherEventDetail>) {
         setLoading(true);
-        refreshData();
+        setAllPosts(posts.slice(0, perPage));
         setTimeout(() => {
             setLoading(false);
             event.detail.complete();
         }, 1000);
     }
 
-
+    
     //load more posts
     const loadPosts = () => {
         setTimeout(() => {
@@ -101,11 +92,11 @@ function Posts(props: PostProps) {
             ]);
         }, 200);
         setLoading(false);
-        setLastPosition(lastPosition + perPage);
+        updatePosts(allPosts);
+        dispatch(setLastPosition);
     };
-
+    
     const loadData = (ev: any) => {
-        setLoading(true);
         setTimeout(() => {
             loadPosts();
             console.log('Loaded data');
@@ -155,9 +146,9 @@ function Posts(props: PostProps) {
         </IonRefresherContent>
       </IonRefresher>
                 <IonList>
-                    {posts && posts.length > 0 && !loading ? allPosts.map((post: iPosts) =>
+                    {posts && posts.length > 0 && !loading ? loadedPosts.map((post) =>
                         <li key={post.PostId} className="px-4 py-6 bg-white shadow sm:p-6">
-                         <SinglePost post={post} PostId={post.PostId} PostBody={post.PostBody} PostedBy={post.PostedBy} Likes={post.Likes}></SinglePost>
+                         <SinglePost PostId={post.PostId} PostBody={post.PostBody} PostedBy={post.PostedBy} Likes={post.Likes}></SinglePost>
                         </li>
                     ) : loadSkeletonPosts(allPosts.length)}
                 </IonList>
@@ -178,7 +169,7 @@ function Posts(props: PostProps) {
     return (
         <React.Fragment>
             <div>
-                <PostLike></PostLike>
+            <PostLike></PostLike>
                 <ul>
                     {RenderPosts()}
                 </ul>

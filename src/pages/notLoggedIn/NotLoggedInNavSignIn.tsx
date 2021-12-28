@@ -106,6 +106,7 @@ function togglePassword(){
 <IonIcon slot="end" className="cursor-pointer select-none animate__animated animate__fadeIn focus:select-none hover:text-gray-200 focus:text-gray-600 focus:text-opacity-50" onClick={()=>togglePassword()} icon={showPassword ? eyeOff : eye}/>
 : null}
           </IonItem>
+          <input type="submit" className={`${styles['submit-enter']}`} />
             <IonButton type="submit" size="large"
             className="flex-none font-bold transition select-none ion-margin-top focus:select-none hover:text-gray-100 focus:text-gray-300 focus:text-opacity-50" color={loading ? "pprimary":"white"} fill="clear">     
 Continue

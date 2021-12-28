@@ -8,7 +8,6 @@ import LoggedInTimeline from './LoggedInTimeline';
 
 
 const LoggedIn: React.FC<RouteComponentProps> = ({ match }) => {
-    console.log(usePathname());
     return (<>
         <HomeMenu></HomeMenu>
               <IonTabs>

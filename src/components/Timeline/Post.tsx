@@ -1,4 +1,5 @@
 import { useParams } from 'react-router';
+import { fetchPostsFeed, fetchPostsType } from '../../features/post/postSlice';
 import Posts from '../Feed/Posts';
 
 type ProfileParams = {
@@ -11,7 +12,7 @@ function Post () {
 
 
     return(
-    <div><Posts type="id" feed="public" id={id}></Posts></div>
+    <div><Posts type={fetchPostsType.ID} feed={fetchPostsFeed.PUBLIC} id={id}></Posts></div>
     )
   }
 

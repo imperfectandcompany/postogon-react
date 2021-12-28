@@ -3,17 +3,11 @@ import MoreOptions from '../MoreOptions';
 import { bookmarkOutline, chatbubbleEllipses, chatbubbleOutline, chatbubblesOutline, ellipseOutline, ellipsisHorizontal, ellipsisVertical, ellipsisVerticalCircle, ellipsisVerticalSharp, heart, heartOutline, optionsOutline, paperPlaneOutline, reload, sendOutline, shareOutline } from 'ionicons/icons';
 import { IonAvatar, IonBadge, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonItem, IonLabel, IonModal, IonNote, IonRow, IonText, IonThumbnail, IonTitle, IonToolbar } from '@ionic/react';
 import styles from "./SinglePost.module.css"; // Import css modules stylesheet as styles
+import { IPost } from '../../../features/post/postSlice';
 
-interface iPosts {
-    post: iPosts
-    PostId: number;
-    PostBody: string;
-    PostedBy: string;
-    Likes: number;
-    To_Whom?: number;
-}
 
-function SinglePost(props:iPosts) {
+
+function SinglePost(props:IPost) {
     const [isLiked, setIsLiked] = useState(false);
     const [viewMoreDetails, setViewMoreDetails] = useState(false);
     const postLikeRef = useRef<HTMLDivElement>(null);

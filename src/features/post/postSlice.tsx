@@ -3,6 +3,8 @@ import axios from 'axios';
 import type { RootState } from '../../app/store'
 import { getToken } from '../../utils/Common';
 import api from "../../utils/API";
+import { actionSheetController } from '@ionic/core';
+import { State } from 'ionicons/dist/types/stencil-public-runtime';
 
 
 
@@ -14,19 +16,27 @@ export interface IPost {
   Likes: number;
 }
 
-interface PostState {
+export interface PostState {
   readonly posts: IPost[];
+  readonly loadedPosts: IPost[];
+  lastPosition: number,
+  perPage: number,
   liked: boolean,
   isLoading: boolean
   error: boolean;
+  tempValue: [];
 }
 
 // Define the initial state using that type
-const initialState: PostState = {
+export const initialState: PostState = {
   posts: [],
+  loadedPosts: [],
+  lastPosition: 8,
+  perPage: 8,
   liked: false,
   isLoading: false,
-  error: false
+  error: false,
+  tempValue: []
 }
 
 export const postSlice = createSlice({
@@ -46,10 +56,19 @@ export const postSlice = createSlice({
     startLoading: state => {
       state.isLoading = true;
     },
-    usersSuccess: (state, action) => {
+    usersSuccess: (state, action: PayloadAction<IPost[]>) => {
       state.posts = action.payload;
       state.isLoading = false;
     },
+    loadInitialPosts: (state, action: PayloadAction<IPost[]>) => {
+      state.loadedPosts = action.payload.slice(0, state.perPage);      
+    },
+    updatePosts: (state, action: PayloadAction<IPost[]>) => {
+    state.loadedPosts = action.payload;
+    },
+    setLastPosition: state => {
+      state.lastPosition = state.lastPosition + state.perPage;
+    },    
     hasError: (state, action) => {
       state.error = action.payload;
       state.isLoading = false;
@@ -63,24 +82,50 @@ export const postSlice = createSlice({
   }
 })
 
+
+export enum fetchPostsType{
+  TIMELINE='TIMELINE',
+  PROFILE='PROFILE',
+  ID='ID'
+}
+
+export enum fetchPostsFeed{
+  PUBLIC='public',
+  PRIVATE='private',
+}
+
 // Action creators are generated for each case reducer function
-export const { updateLike, usersSuccess, startLoading, hasError } = postSlice.actions
+export const { updateLike, usersSuccess, startLoading, hasError, loadInitialPosts, setLastPosition, updatePosts } = postSlice.actions
 // Other code such as selectors can use the imported `RootState` type
 export const selectIsLiked = (state: RootState) => state.post.liked
 export default postSlice.reducer
 
 //thunk to  handle side effects, if userSuccess goes through then it will return a new object in the reducer
-export const fetchPosts = () => async (dispatch:Dispatch) => {
+export const fetchPosts = (type:fetchPostsType, feed?:fetchPostsFeed, id?:number, username?:string) => async (dispatch:Dispatch) => {
   const token = getToken();
-  const feed = "public";
   dispatch(startLoading());
   try {
-    await api.get(`/posts/public?token=${token}&feed=${feed}`)
-      .then((response: { data: IPost; }) => dispatch(usersSuccess(response.data)))
+    switch(type){
+      case fetchPostsType.TIMELINE:
+        await api.get(`/posts/public?token=${token}&feed=${feed}`)
+        .then((response: { data: IPost[]; }) => dispatch(usersSuccess(response.data)))
+        break;
+      case fetchPostsType.PROFILE:
+        await api.get(`/profile?username=${username}&feed=${feed}`)
+        .then((response: { data: IPost[]; }) => dispatch(usersSuccess(response.data)))
+        break;
+      case fetchPostsType.ID:
+        await api.get(`/posts?id=${id}`)
+        .then((response: { data: IPost[]; }) => dispatch(usersSuccess(response.data)))
+        break;        
+    }
   } catch (err) {
     dispatch(hasError(err))
   }
 }
+
+
+
 /*action is just a javascript object
 Normally type is in caps and is descriptive
 what is type meant to do? We want to like a post
