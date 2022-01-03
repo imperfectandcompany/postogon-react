@@ -1,4 +1,4 @@
-import React, { Dispatch, useEffect, useState } from 'react';
+import React, { Dispatch, useEffect, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { getToken } from '../../utils/Common';
 import { RefresherEventDetail } from '@ionic/core';
@@ -10,102 +10,135 @@ import { ActionCreator, ThunkAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { useCheckIfUserExistsByUsernameQuery } from '../../app/services/postogon';
 import { useSelector } from 'react-redux';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { fetchPosts, fetchPostsFeed, fetchPostsType, initialState, IPost, loadInitialPosts, setLastPosition, updatePosts } from '../../features/post/postSlice';
+import { Z_FILTERED } from 'zlib';
+import { fetchPostsFeed, fetchPostsType, initialState, IPost } from '../../features/post/postSlice';
+import { useGetTimelineFeedQuery } from '../../features/api/apiSlice';
+import Loading from '../Loading/Loading';
+import Post from '../Timeline/Post';
+import { phonePortraitSharp } from 'ionicons/icons';
+import CreatePost from '../Timeline/CreatePost';
 
 
 interface PostProps {
     feed: fetchPostsFeed;
-    type: fetchPostsType;
+    type: string;
     username?: string;
     id?: string;
 }
 
 function Posts(props: PostProps) {
 
+
+
+
     const [loading, setLoading] = useState(true);
-    const {posts, isLoading, loadedPosts, lastPosition, perPage} = useAppSelector(state => state.post);
-    const [allPosts, setAllPosts] = useState(initialState.posts);
+    const [allPosts, setAllPosts] = useState<IPost[]>(initialState.posts);
+
+    const perPage = 8;
+    const [lastPosition, setLastPosition] = useState(perPage);
     const [isInfiniteDisabled, setInfiniteDisabled] = useState(false);
 
+    /*data is the response from the api
+    isLoading indicates if the hook is making the first request
+    isFetching is a boolean indicating if the hook is currently making a request
+    isSuccess is a boolean that indicates if the hook has made a successful request AND has cached data available (in this case, 'data' should be defined)
+    isError is a boolean indicating  if the last request had an error
+    error: is a serialized error object.
+    */
+    const {
+        data: posts = [],
+        isLoading,
+        isSuccess,
+        isFetching,
+        isError,
+        error,
+        refetch
+      } = useGetTimelineFeedQuery(props.feed);
 
-    const dispatch = useAppDispatch()
+    const sortedPosts = useMemo(() => {
+        const sortedPosts = posts;
+        return sortedPosts
+      }, [posts])
 
+      useEffect(() => {
+        loadPosts();
+    }, [props.feed]);
 
+    useIonViewWillEnter(() => {
+        loadPosts();
+    });
     
-  /*  const refreshData = async () => {
-        const token = getToken();
-        if (props.type === "timeline") {
-            const response = await fetch(`https://api.postogon.com/posts/public?token=${token}&feed=${props.feed}`);
-            const newData = await response.json();
-            setData(newData);
-            setAllPosts(newData.slice(0, perPage));
-        } else if (props.type === "profile") {
-            const response = await fetch(`https://api.postogon.com/profile?username=${props.username}&feed=${props.feed}`);
-            const newData = await response.json();
-            setData(newData);
-            setAllPosts(newData.slice(0, perPage));
-        }
-        else if (props.type === "id") {
-            const response = await fetch(`https://api.postogon.com/posts?id=${props.id}`);
-            const newData = await response.json();
-            setData(newData);
-            setAllPosts(newData.slice(0, perPage));
-        }
-    } */
-
-
-    const getData = async () => {
-        //get posts based on type and feed
-        dispatch(fetchPosts(props.type, props.feed));
-        //load first page of posts
-        dispatch(loadInitialPosts);
-        console.log(loadedPosts);
+    //load more posts
+    const loadPosts = () => {
+        setTimeout(() => {
+            setAllPosts((prev:any[] = []) => [
+                ...prev,
+                ...sortedPosts.slice(lastPosition, lastPosition + perPage),
+            ]);
+        }, 200);
+        setLoading(false);
+        setLastPosition(lastPosition + perPage);
     };
+
+    const loadData = (ev: any) => {
+        setLoading(true);
+        setTimeout(() => {
+            loadPosts();
+            ev.target.complete();
+            if (sortedPosts.length === 1000) {
+                setInfiniteDisabled(true);
+            }
+        }, 500);
+    }
+      let content
+      if (isLoading) {
+        content = <Loading />
+      } else if (isSuccess) {
+
+          const renderedPosts =<>
+      <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
+        <IonRefresherContent
+          refreshingSpinner="dots">
+        </IonRefresherContent>
+      </IonRefresher>
+                <IonList>         
+         {!loading ? allPosts.map((post:IPost, index:number) =>
+            <SinglePost key={index} PostedOn={post.PostedOn} PostBody={post.PostBody} PostedBy={post.PostedBy} Likes={post.Likes} PostId={post.PostId} />
+        ) : loadSkeletonPosts(sortedPosts.length)}
+                        </IonList>
+                <IonInfiniteScroll
+                    onIonInfinite={loadData}
+                    threshold="100px"
+                    disabled={isInfiniteDisabled}
+                >
+                    <IonInfiniteScrollContent
+                        loadingSpinner="lines-small"
+                    ></IonInfiniteScrollContent>
+                </IonInfiniteScroll>
+        </>           
+
+        content = <div className={isFetching ? "opacity-10 transition" : "opacity-100 transition"}>{renderedPosts}</div>
+
+      } else if (isError && error !== undefined) {
+          console.log(error);
+        content = <div>{error.toString()}</div>
+      }
 
     useIonViewWillEnter(() => {
         loadPosts();
     });
 
-    
-    useEffect(() => {
-        getData();
-    }, [props.feed]);
-   
-
     function doRefresh(event: CustomEvent<RefresherEventDetail>) {
         setLoading(true);
-        setAllPosts(posts.slice(0, perPage));
+        refetch();
         setTimeout(() => {
             setLoading(false);
             event.detail.complete();
         }, 1000);
     }
 
-    
-    //load more posts
-    const loadPosts = () => {
-        setTimeout(() => {
-            setAllPosts((prev) => [
-                ...prev,
-                ...posts.slice(lastPosition, lastPosition + perPage),
-            ]);
-        }, 200);
-        setLoading(false);
-        updatePosts(allPosts);
-        dispatch(setLastPosition);
-    };
-    
-    const loadData = (ev: any) => {
-        setTimeout(() => {
-            loadPosts();
-            console.log('Loaded data');
-            ev.target.complete();
-            if (posts.length === 1000) {
-                setInfiniteDisabled(true);
-            }
-        }, 500);
-    }
+
+
 
     //function to load skeleton posts
     function loadSkeletonPosts(n: number) {
@@ -127,51 +160,17 @@ function Posts(props: PostProps) {
         loadSkeletonPosts(1);
     }
 
-    //load posts with infinite scrolling
-    function RenderPosts() {
 
-        interface iPosts {
-            post: iPosts
-            PostId: number;
-            PostBody: string;
-            PostedBy: string;
-            Likes: number;
-        }
-
-        return (
-            <>
-      <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
-        <IonRefresherContent
-          refreshingSpinner="dots">
-        </IonRefresherContent>
-      </IonRefresher>
-                <IonList>
-                    {posts && posts.length > 0 && !loading ? loadedPosts.map((post) =>
-                        <li key={post.PostId} className="px-4 py-6 bg-white shadow sm:p-6">
-                         <SinglePost PostId={post.PostId} PostBody={post.PostBody} PostedBy={post.PostedBy} Likes={post.Likes}></SinglePost>
-                        </li>
-                    ) : loadSkeletonPosts(allPosts.length)}
-                </IonList>
-                <IonInfiniteScroll
-                    onIonInfinite={loadData}
-                    threshold="100px"
-                    disabled={isInfiniteDisabled}
-                >
-                    <IonInfiniteScrollContent
-                        loadingSpinner="lines-small"
-                    ></IonInfiniteScrollContent>
-                </IonInfiniteScroll>
-                </>
-        )
-
-    }
 
     return (
         <React.Fragment>
             <div>
-            <PostLike></PostLike>
+
+                <CreatePost></CreatePost>
+            <button onClick={refetch}>Refetch Posts</button>
+
+      {content}
                 <ul>
-                    {RenderPosts()}
                 </ul>
             </div></React.Fragment>
     );

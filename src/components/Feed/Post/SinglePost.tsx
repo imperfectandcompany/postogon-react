@@ -4,6 +4,7 @@ import { bookmarkOutline, chatbubbleEllipses, chatbubbleOutline, chatbubblesOutl
 import { IonAvatar, IonBadge, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonItem, IonLabel, IonModal, IonNote, IonRow, IonText, IonThumbnail, IonTitle, IonToolbar } from '@ionic/react';
 import styles from "./SinglePost.module.css"; // Import css modules stylesheet as styles
 import { IPost } from '../../../features/post/postSlice';
+import Posts from '../Posts';
 
 
 
@@ -39,9 +40,32 @@ function SinglePost(props:IPost) {
         setViewMoreDetails(false)
     }
 
+    const renderModal = () => {
+        return(
+            <IonModal
+            onDidDismiss={() => setViewMoreDetails(false)}
+            isOpen={viewMoreDetails}
+            swipeToClose={true}
+          >
+    <IonHeader collapse="condense">
+            <IonToolbar color="light">
+              <IonTitle>Comments</IonTitle>
+              <IonButton color="transparent" slot="end" onClick={(e) => viewMoreDetailsHandler(e)}>
+    <IonText color="primary">Close</IonText>
+              </IonButton>
+            </IonToolbar>
+          </IonHeader>
+            <IonContent color="dark">
+            {renderCard()}
+     </IonContent>
+          </IonModal>
+        );
+    }
+    
+
     const renderCard = () => {
         return(
-            <IonCard button={!viewMoreDetails} onClick={()=>(setViewMoreDetails(true))} class={`${styles['removeBorderRadius']}` +" ion-no-margin"}>
+            <IonCard id={`${props.PostId}`} button={!viewMoreDetails} onClick={()=>(setViewMoreDetails(true))} class={`${styles['removeBorderRadius']}` +" ion-no-margin"}>
                 <div className="bg-gray-50">
                     <IonHeader>
                         <IonItem lines="none">
@@ -99,25 +123,8 @@ function SinglePost(props:IPost) {
     return (
         <React.Fragment>
       {/* Card Modal */}
-      <IonModal
-        onDidDismiss={() => setViewMoreDetails(false)}
-        isOpen={viewMoreDetails}
-        swipeToClose={true}
-      >
-<IonHeader collapse="condense">
-        <IonToolbar color="light">
-          <IonTitle>Comments</IonTitle>
-          <IonButton color="transparent" slot="end" onClick={(e) => viewMoreDetailsHandler(e)}>
-<IonText color="primary">Close</IonText>
-          </IonButton>
-        </IonToolbar>
-      </IonHeader>
-        <IonContent color="dark">
-        {renderCard()}
- </IonContent>
-      </IonModal>
-
-      
+      {renderModal()}
+      {/* Post */}
             {renderCard()}
         </React.Fragment>
     );
