@@ -4,10 +4,12 @@ import SinglePost from './Post/SinglePost';
 import api from "../../utils/API";
 import { getToken } from '../../utils/Common';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { IonInfiniteScroll, IonInfiniteScrollContent, IonList, IonRefresher, IonRefresherContent, RefresherEventDetail, StackContext, useIonViewWillEnter } from '@ionic/react';
+import { IonAvatar, IonButton, IonFooter, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel, IonList, IonRefresher, IonRefresherContent, IonRippleEffect, IonRow, RefresherEventDetail, StackContext, useIonViewWillEnter } from '@ionic/react';
 import skeletonPost from './skeletonPost';
 import Loading from '../Loading/Loading';
 import CreatePost from '../Timeline/CreatePost';
+import MoreOptions from './MoreOptions';
+import { bookmarkOutline, paperPlaneOutline, chatbubblesOutline, heart, heartOutline } from 'ionicons/icons';
 
 
 
@@ -24,6 +26,7 @@ function Posts(props: PostProps) {
     const posts = useAppSelector(state => state.post.posts)
     const isLoading = useAppSelector(state => state.post.isLoading)
     const [isInfiniteDisabled, setInfiniteDisabled] = useState(false);
+    const [isLiked, setIsLiked] = useState(false);
 
 
     const dispatch = useAppDispatch();
@@ -84,32 +87,41 @@ function Posts(props: PostProps) {
     }
 
     //if loading is true and post type is not id
-if(isLoading && !props.id && loadedPosts.length <= 0){
-    return loadSkeletonPosts(8);  
- }
- 
- //if loading is true and post type is id
- if(isLoading && props.id && loadedPosts.length <= 0){
-    return loadSkeletonPosts(1);  
- }  
+    if (isLoading && !props.id && loadedPosts.length <= 0) {
+        return loadSkeletonPosts(8);
+    }
+
+    //if loading is true and post type is id
+    if (isLoading && props.id && loadedPosts.length <= 0) {
+        return loadSkeletonPosts(1);
+    }
+
+
+    const AddPostToLikes = (e: React.MouseEvent<HTMLIonIconElement, MouseEvent> | React.MouseEvent<HTMLIonButtonElement, MouseEvent>, feed: string, postID: string,) => {
+        e.stopPropagation();
+        //add post like to backend...
+
+        setIsLiked(isLiked ? false : true);
+    }
 
 
     return (
         <React.Fragment>
+
+
             <div>
-                <CreatePost></CreatePost>
                 <ul>
                     <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
                         <IonRefresherContent
                             refreshingSpinner="dots">
                         </IonRefresherContent>
                     </IonRefresher>
-                    <IonList>
-                        {posts && posts.length > 0 && !isLoading ? loadedPosts.map((post: IPost, index: number) =>
-                            <li key={post.PostId} className="px-4 py-6 bg-white shadow sm:p-6">
-                                <SinglePost key={index} PostedOn={post.PostedOn} PostBody={post.PostBody} PostedBy={post.PostedBy} Likes={post.Likes} PostId={post.PostId} />
-                            </li>
-                        ) : loadSkeletonPosts(loadedPosts.length)}
+                    <IonList className="relative bg-white divide-y shadow-lg divide-gray-50 ">
+                            <div className="snap-y snap-mandatory">
+                            {posts && posts.length > 0 && !isLoading ? loadedPosts.map((post: IPost, index: number) =>
+                                            <SinglePost key={index} PostedOn={post.PostedOn} PostBody={post.PostBody} PostedBy={post.PostedBy} Likes={post.Likes} PostId={post.PostId} />
+                            ) : loadSkeletonPosts(loadedPosts.length)}
+                                        </div>
                     </IonList>
                     <IonInfiniteScroll
                         onIonInfinite={loadData}

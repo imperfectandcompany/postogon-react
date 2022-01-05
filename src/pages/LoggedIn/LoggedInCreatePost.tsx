@@ -28,12 +28,12 @@ const LoggedInCreatePost: React.FC = () => {
   const routeRedirect = document.createElement('IonRedirect');
   routeRedirect.setAttribute('from', '*');
   routeRedirect.setAttribute('to', '/home');
-  
+
   if (postSubmitted) {
     router?.appendChild(routeRedirect);
   }
-  
-  const {navigate} = useContext(NavContext);
+
+  const { navigate } = useContext(NavContext);
 
   // Call this function when required to redirect with the back animation
   const redirect = useCallback(
@@ -46,8 +46,8 @@ const LoggedInCreatePost: React.FC = () => {
     if (canSave) {
       try {
         await addNewPost({ body: currentValue, token: getToken(), to_whom: to_whom }).unwrap()
-          setCurrentValue("");
-          redirect();
+        setCurrentValue("");
+        redirect();
       } catch (err) {
         console.error('Failed to save the post: ', err)
       }
@@ -76,47 +76,49 @@ const LoggedInCreatePost: React.FC = () => {
   };
   return (
     <>
-    <IonPage id="main-content">
-      <IonHeader class="ion-no-border"  collapse="fade">
-      <IonToolbar color="white">
-      <IonButtons slot="start">
-      <IonBackButton text=""/>
-      </IonButtons>
-    <IonTitle>Create Post</IonTitle>
-  </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen={true} color="white">
-      <IonCard color="White" className="shadow-none ">
-          <IonCardContent>
-          <IonTextarea color="light" autofocus={true} value={currentValue} onIonChange={e => {        if (e.detail.value === undefined) return;
-        setCurrentValue(e.detail.value!);}} spellcheck={true} autoGrow={true} enterkeyhint="done" inputmode="text" maxlength={280} placeholder="What's poppin'?" required={true}></IonTextarea>
-          </IonCardContent>
-          <IonRow className="justify-end">
+      <IonPage id="main-content">
+        <IonHeader class="ion-no-border" collapse="fade">
+          <IonToolbar color="white">
+            <IonButtons slot="start">
+              <IonBackButton text="" />
+            </IonButtons>
+            <IonTitle>Create Post</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent fullscreen={true} color="white">
+          <IonCard color="White" className="shadow-none ">
+            <IonCardContent>
+              <IonTextarea color="light" autofocus={true} value={currentValue} onIonChange={e => {
+                if (e.detail.value === undefined) return;
+                setCurrentValue(e.detail.value!);
+              }} spellcheck={true} autoGrow={true} enterkeyhint="done" inputmode="text" maxlength={280} placeholder="What's poppin'?" required={true}></IonTextarea>
+            </IonCardContent>
+            <IonRow className="justify-end">
               <div className="text-xs font-semibold text-gray-400 count"><span>{currentValue.length}</span> / <span>280</span></div>
-              </IonRow> 
+            </IonRow>
 
-        </IonCard>
-      </IonContent>
+          </IonCard>
+        </IonContent>
 
-      <IonFooter className="bg-white border-2 border-t border-gray-100 ion-padding-bottom">
-				<IonRow className="ion-padding-start ion-padding-end ion-padding-bottom ion-padding-top">
-        <IonRow  className="flex w-full ml-auto">
-                  {/*-- Segment with anchors --*/}
-                  <IonSegment color="light" className="my-4"  onIonChange={e => { setFeed(e.detail.value!) }} value={feed}>
-          <IonSegmentButton value="1">
-            <IonLabel>Public</IonLabel>
-          </IonSegmentButton>
-          <IonSegmentButton value="2">
-            <IonLabel>Private</IonLabel>
-          </IonSegmentButton>
-        </IonSegment>
-        </IonRow>
-					<IonCol size="12">
-          {postButton()}
-					</IonCol>
-				</IonRow>
-			</IonFooter>
-    </IonPage>
+        <IonFooter className="bg-white border-2 border-t border-gray-100 ion-padding-bottom">
+          <IonRow className="ion-padding-start ion-padding-end ion-padding-bottom ion-padding-top">
+            <IonRow className="flex w-full ml-auto">
+              {/*-- Segment with anchors --*/}
+              <IonSegment color="light" className="my-4" onIonChange={e => { setFeed(e.detail.value!) }} value={feed}>
+                <IonSegmentButton value="1">
+                  <IonLabel>Public</IonLabel>
+                </IonSegmentButton>
+                <IonSegmentButton value="2">
+                  <IonLabel>Private</IonLabel>
+                </IonSegmentButton>
+              </IonSegment>
+            </IonRow>
+            <IonCol size="12">
+              {postButton()}
+            </IonCol>
+          </IonRow>
+        </IonFooter>
+      </IonPage>
     </>
 
   );

@@ -23,11 +23,11 @@ function MoreOptions(props:MoreOptionsProps) {
 
 
     return (
-          <><IonButton fill="clear" color="light"
+          <><IonButton color="clear" fill="clear" slot="end"
           className="overflow-hidden focus:outline-none"
           onClick={(e) => returnOptions(e)}
         >
-        <IonIcon icon={ellipsisHorizontal} size="small" slot="end"></IonIcon>
+        <IonIcon icon={ellipsisHorizontal} size="small" className="text-gray-900/75" ></IonIcon>
             </IonButton>
             <IonActionSheet
             translucent={true}
