@@ -76,7 +76,7 @@ function togglePassword(){
  : <IonProgressBar type="indeterminate" class="invisible"></IonProgressBar>}
         <IonToolbar color="none"  className={`${styles.toolbar}`} >
           <IonButtons slot="start">
-            <IonBackButton color="white"/>
+            <IonBackButton text="" color="white"/>
           </IonButtons>
           <IonTitle color="white">Sign In</IonTitle>
         </IonToolbar>

@@ -1,32 +1,32 @@
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonMenuToggle, IonMenuButton, IonTextarea } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonMenuToggle } from '@ionic/react';
 import { searchOutline } from 'ionicons/icons';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import Posts from '../../components/Feed/Posts';
-import CreatePost from '../../components/Timeline/CreatePost';
-import TextArea from '../../components/Timeline/TextArea';
 import { fetchPostsFeed, fetchPostsType } from '../../features/post/postSlice';
-import HomeMenu from './HomeMenu/HomeMenu';
 
 const LoggedInTimeline: React.FC = () => {
 
   const [feed, setFeed] = useState(fetchPostsFeed.PUBLIC);
-  
+  const logoColor = {
+    filter: 'brightness(0.1)',
+  };
   return (
     <>
     <IonPage id="main-content">
       <IonHeader class="ion-no-border">
-        <IonToolbar color="light">
+        <IonToolbar color="white">
         <IonMenuToggle menu="first">
         <IonButton color="transparent" size="small">
         <img
-             className="w-6" 
+             className="w-6 h-6 mx-auto motion-reduce:animate-spin" 
+             style={logoColor}
              src={process.env.PUBLIC_URL + '/assets/icon/icon.svg'}
              alt="postogon logo"/>
               </IonButton>
               </IonMenuToggle>
               <IonTitle>Postogon</IonTitle>
               <IonButton color="transparent" size="small" slot="end">
-                <IonIcon slot="icon-only" color="dark" icon={searchOutline}></IonIcon>
+                <IonIcon slot="icon-only" color="pprimary" icon={searchOutline}></IonIcon>
               </IonButton>
         </IonToolbar>
       </IonHeader>

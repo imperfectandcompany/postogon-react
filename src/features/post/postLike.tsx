@@ -1,10 +1,8 @@
 import { IonButton, IonIcon } from "@ionic/react";
-import { chatbubblesOutline, heart, heartOutline } from "ionicons/icons";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { heart, heartOutline } from "ionicons/icons";
+import React, { useState } from "react";
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
-import Posts from "../../components/Feed/Posts";
-import { fetchPosts, initialState, IPost, updateLike } from "./postSlice";
+import { initialState } from "./postSlice";
 
 
 export default function PostLike(){

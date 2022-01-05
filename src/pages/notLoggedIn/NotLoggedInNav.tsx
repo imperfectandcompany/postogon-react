@@ -32,11 +32,11 @@ const NotLoggedInNav: React.FC = () => {
             </h1>
 
             <div className="ion-margin-bottom">
-              <IonButton className="flex font-bold" color="white" fill="outline" routerLink="signin">
+              <IonButton className="flex font-bold" color="white" fill="outline" routerLink="/signin" routerDirection="forward">
                 <IonIcon slot="start" icon={mail} />
                 Sign in with email
               </IonButton>
-              <IonButton className="flex font-bold" color="white" fill="clear" routerLink="signup">New account</IonButton>
+              <IonButton className="flex font-bold" color="white" fill="clear" routerLink="/signup" routerDirection="forward">New account</IonButton>
             </div>
 
             <IonLabel className="ion-margin-top animate__animated animate__fadeInUp">

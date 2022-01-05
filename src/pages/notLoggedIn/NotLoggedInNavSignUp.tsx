@@ -17,7 +17,7 @@ const NotLoggedInNavSignUp: React.FC = () => {
       <IonHeader>
       <IonToolbar color="white" className={`${styles.toolbar}`} >
           <IonButtons slot="start">
-            <IonBackButton />
+            <IonBackButton text="" />
           </IonButtons>
           <IonTitle>Sign Up</IonTitle>
         </IonToolbar>

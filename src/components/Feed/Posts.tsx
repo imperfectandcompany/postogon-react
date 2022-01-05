@@ -7,6 +7,7 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { IonInfiniteScroll, IonInfiniteScrollContent, IonList, IonRefresher, IonRefresherContent, RefresherEventDetail, StackContext, useIonViewWillEnter } from '@ionic/react';
 import skeletonPost from './skeletonPost';
 import Loading from '../Loading/Loading';
+import CreatePost from '../Timeline/CreatePost';
 
 
 
@@ -35,7 +36,7 @@ function Posts(props: PostProps) {
     const morePosts = () => {
         setTimeout(() => {
             dispatch(loadPosts());
-        }, 200);
+        }, 50);
         dispatch(updatePosition());
         dispatch(stopLoading());
     };
@@ -49,7 +50,7 @@ function Posts(props: PostProps) {
             if (posts.length === 1000) {
                 setInfiniteDisabled(true);
             }
-        }, 500);
+        }, 50);
     }
 
 
@@ -84,7 +85,6 @@ function Posts(props: PostProps) {
 
     //if loading is true and post type is not id
 if(isLoading && !props.id && loadedPosts.length <= 0){
-    console.log(loadedPosts.length);
     return loadSkeletonPosts(8);  
  }
  
@@ -97,9 +97,7 @@ if(isLoading && !props.id && loadedPosts.length <= 0){
     return (
         <React.Fragment>
             <div>
-                <div className="font-bold text-black bg-white">
-                    {isLoading ? " loading" : " loaded"}
-                </div>
+                <CreatePost></CreatePost>
                 <ul>
                     <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
                         <IonRefresherContent

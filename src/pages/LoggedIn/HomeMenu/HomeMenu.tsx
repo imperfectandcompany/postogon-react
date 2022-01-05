@@ -1,7 +1,6 @@
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonMenuToggle, IonItem, IonList, IonMenu, IonRouterOutlet, IonCol, IonLabel, IonRow, IonThumbnail } from '@ionic/react';
-import { addOutline, helpCircleOutline, logOutOutline, peopleOutline, personAddOutline, searchOutline, settingsOutline } from 'ionicons/icons';
+import { IonContent, IonButton, IonIcon, IonItem, IonList, IonMenu, IonCol, IonLabel, IonRow, IonThumbnail } from '@ionic/react';
+import { addOutline, helpCircleOutline, logOutOutline, peopleOutline, personAddOutline, settingsOutline } from 'ionicons/icons';
 import React from 'react';
-import { useState } from 'react';
 import AuthContext from '../../../AuthedContext'
 
 import styles from './HomeMenu.module.css'; // Import css modules stylesheet as styles

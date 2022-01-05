@@ -60,31 +60,25 @@ function App() {
   }, [verify]);
 
   if (authLoading && getToken()) {
-    return(
+    return (
       <Loading></Loading>
     );
   }
 
   return (
     <IonApp>
-      {!authValues.authenticated && !getToken() ?
-        <IonReactRouter>
-        <IonRouterOutlet>
-          <Route path="/" component={NotLoggedIn} />
+      <IonReactRouter>
+        
+      <IonRouterOutlet>
+      <Route
+  path="/"
+  render={(props) => {
+    return !authValues.authenticated && !getToken() ? <NotLoggedIn {...props} /> : <LoggedIn {...props} />;
+  }}
+/>
+              <Route render={() => <Redirect to="/" />} />
         </IonRouterOutlet>
-      </IonReactRouter> :
-      (<IonReactRouter>
-        <IonRouterOutlet>
-          <Route path="/" component={LoggedIn} />
-          <Route render={() => <Redirect to="/home"/>} />
-        </IonRouterOutlet>
-      </IonReactRouter>)
-      }
-
-
-
-
-
+      </IonReactRouter>
     </IonApp>
   );
 }

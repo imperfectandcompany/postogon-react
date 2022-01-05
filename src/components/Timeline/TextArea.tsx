@@ -8,7 +8,7 @@ import Posts from '../Feed/Posts';
 const TextArea = ({ currentValue, placeholder, rows, handleUpdate }:any) => {
     //used to update textArea with a ref that infers the type (textarea)
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const txHeight = 44;
+    const txHeight = 60;
 
     useEffect(() => {
         if (textareaRef && textareaRef.current) {

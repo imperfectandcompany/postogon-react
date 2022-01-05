@@ -6,14 +6,13 @@ import NotLoggedInNavSignIn from './NotLoggedInNavSignIn';
 
 
 
-const NotLoggedIn: React.FC<RouteComponentProps> = ({ match }) => {
+const NotLoggedIn: React.FC<RouteComponentProps> = () => {
   return (
     <IonPage>
     <IonRouterOutlet>
-      <Route exact path={match.url} component={NotLoggedInNav} />
-      <Route path={`${match.url}signup`} component={NotLoggedInNavSignUp} />
-      <Route path={`${match.url}signin`} component={NotLoggedInNavSignIn} />
-      <Route render={() => <Redirect to={match.url} />} />
+      <Route exact path="/" component={NotLoggedInNav} />
+      <Route exact path="/signup" component={NotLoggedInNavSignUp} />
+      <Route exact path="/signin" component={NotLoggedInNavSignIn} />
     </IonRouterOutlet>
     </IonPage>
   );
