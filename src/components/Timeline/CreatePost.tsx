@@ -20,16 +20,11 @@ function CreatePost() {
     const [currentValue, setCurrentValue] = useState("");// managing textArea value
     //called from child component to update current value
 
-    const [title, setTitle] = useState('')
-    const [content, setContent] = useState('')
-    const [userId, setUserId] = useState('')
-
     const handleUpdate = (value: string) => {
         setCurrentValue(value);
     };
 
     const [addNewPost, { isLoading }] = useAddNewPostMutation();
-    const onAuthorChanged = (e: { target: { value: SetStateAction<string>; }; }) => setUserId(e.target.value)
 
     const canSave = [currentValue, getToken()].every(Boolean) && !isLoading
 

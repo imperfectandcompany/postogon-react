@@ -1,5 +1,4 @@
-import { ActionCreator, createAsyncThunk, createSlice, Dispatch, PayloadAction, ThunkAction } from '@reduxjs/toolkit'
-import axios from 'axios';
+import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../app/store'
 import { getToken } from '../../utils/Common';
 import api from "../../utils/API";
@@ -16,7 +15,10 @@ export interface IPost {
 }
 
 export interface PostState {
-  readonly posts: IPost[];
+  readonly posts: IPost[],
+  readonly loadedPosts: IPost[],
+  perPage: number,
+  lastPosition: number,
   liked: boolean,
   isLoading: boolean
   error: boolean;
@@ -25,8 +27,11 @@ export interface PostState {
 // Define the initial state using that type
 export const initialState: PostState = {
   posts: [],
+  loadedPosts: [],
+  lastPosition: 8,
+  perPage: 8,
   liked: false,
-  isLoading: false,
+  isLoading: true,
   error: false
 }
 
@@ -47,10 +52,28 @@ export const postSlice = createSlice({
     startLoading: state => {
       state.isLoading = true;
     },
-    usersSuccess: (state, action: PayloadAction<IPost[]>) => {
+    stopLoading: state => {
+      state.isLoading = false;
+    },    
+    fetchSuccess: (state, action: PayloadAction<IPost[]>) => {
+      //initialize post position in case of refresh
+      state.lastPosition = state.perPage;
+      //all posts
       state.posts = action.payload;
+      //get the first 8 posts
+      state.loadedPosts = state.posts.slice(0, state.perPage);
       state.isLoading = false;
     },
+    loadPosts: state => {
+      //take the previous value of loadedposts and add the last position by the next 8 (basically the next page) to get the next set of posts
+      state.loadedPosts = [...state.loadedPosts, ...state.posts.slice(state.lastPosition, state.lastPosition + state.perPage)]
+    },
+    updatePosition: state => {
+      //keep track of the last position
+      state.lastPosition = state.lastPosition + state.perPage;
+      //after position is updated, set loading as false
+      state.isLoading = false;      
+    },        
     hasError: (state, action) => {
       state.error = action.payload;
       state.isLoading = false;
@@ -77,7 +100,7 @@ export enum fetchPostsFeed{
 }
 
 // Action creators are generated for each case reducer function
-export const { updateLike, usersSuccess, startLoading, hasError } = postSlice.actions
+export const { updateLike, loadPosts, fetchSuccess, updatePosition, startLoading, stopLoading, hasError } = postSlice.actions
 // Other code such as selectors can use the imported `RootState` type
 export const selectIsLiked = (state: RootState) => state.post.liked
 export default postSlice.reducer
@@ -90,15 +113,15 @@ export const fetchPosts = (type:fetchPostsType, feed?:fetchPostsFeed, id?:number
     switch(type){
       case fetchPostsType.TIMELINE:
         await api.get(`/posts/public?token=${token}&feed=${feed}`)
-        .then((response: { data: IPost[]; }) => dispatch(usersSuccess(response.data)))
+        .then((response: { data: IPost[]; }) => dispatch(fetchSuccess(response.data)))
         break;
       case fetchPostsType.PROFILE:
         await api.get(`/profile?username=${username}&feed=${feed}`)
-        .then((response: { data: IPost[]; }) => dispatch(usersSuccess(response.data)))
+        .then((response: { data: IPost[]; }) => dispatch(fetchSuccess(response.data)))
         break;
       case fetchPostsType.ID:
         await api.get(`/posts?id=${id}`)
-        .then((response: { data: IPost[]; }) => dispatch(usersSuccess(response.data)))
+        .then((response: { data: IPost[]; }) => dispatch(fetchSuccess(response.data)))
         break;        
     }
   } catch (err) {
