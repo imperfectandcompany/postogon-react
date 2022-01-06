@@ -60,7 +60,7 @@ function SinglePost(props: IPost) {
     <IonTitle>Comments</IonTitle>
   </IonToolbar>                    
                 </IonHeader>
-                <IonContent color="dark">
+                <IonContent color="white">
                     {renderModalContent()}
                 </IonContent>
             </IonModal>
@@ -127,7 +127,7 @@ function SinglePost(props: IPost) {
     const renderCard = () => {
         return (
             <div className="flex flex-col cursor-default hover:cursor-pointer active:cursor-default active:bg-gray-100 " onClick={() => (setViewMoreDetails(true))}>
-                <div className="sticky top-0 z-40 flex items-center px-4 py-3 text-sm font-semibold text-gray-900 snap-start dark:text-gray-200 bg-gray-50/20 backdrop-blur-sm ring-1 dark:ring-gray-400/10">
+                <div className="sticky top-0 z-40 flex items-center px-4 py-3 text-sm font-semibold text-gray-900 snap-start bg-gray-50/5 backdrop-blur-sm ring-1 ring-gray-400/10">
                     <IonHeader>
                         <IonItem lines="none">
                             <div className="flex items-center group">
@@ -143,9 +143,9 @@ function SinglePost(props: IPost) {
                         </IonItem>
                     </IonHeader>
                 </div>
-                <div className="sticky inset-0 z-30 px-4 py-3 text-gray-900 snap-start dark:text-gray-200 bg-gray-50/20 backdrop-blur-sm ring-1 dark:ring-gray-300/10">
+                <div className="sticky inset-0 z-30 px-4 py-3 text-gray-900 snap-start bg-gray-50/10 backdrop-blur-sm ring-1 ring-gray-300/10">
                     <div>
-                        <IonCardContent className="text-sm text-gray-900 dark:text-gray-200 ">
+                        <IonCardContent className="text-gray-200 text-md ">
                         <div className={`${styles['post-content']}` + " antialiased text-gray-900 ml-3 sm:subpixel-antialiased md:antialiased"}>
                                 {trimText(`${props.PostBody}`)}
                                 <IonRow className="justify-end">
@@ -155,7 +155,7 @@ function SinglePost(props: IPost) {
                         </IonCardContent>
                     </div>
                 </div>
-                <div className="sticky bottom-0 z-20 flex items-center px-4 py-3 text-sm font-semibold text-gray-900 dark:text-gray-200 ">
+                <div className="sticky bottom-0 z-20 flex items-center px-4 py-3 text-sm font-semibold text-gray-900 ">
                     <IonFooter>
                         <div >
                             <IonRow className="ion-align-self-center ion-justify-content-between">

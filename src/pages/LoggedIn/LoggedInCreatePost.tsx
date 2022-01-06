@@ -76,8 +76,8 @@ const LoggedInCreatePost: React.FC = () => {
   };
   return (
     <>
-      <IonPage id="main-content">
-        <IonHeader class="ion-no-border" collapse="fade">
+      <IonPage id="main-content" className="bg-white">
+        <IonHeader class="ion-no-border" translucent={true}>
           <IonToolbar color="white">
             <IonButtons slot="start">
               <IonBackButton text="" />
@@ -88,7 +88,7 @@ const LoggedInCreatePost: React.FC = () => {
         <IonContent fullscreen={true} color="white">
           <IonCard color="White" className="shadow-none ">
             <IonCardContent>
-              <IonTextarea color="light" autofocus={true} value={currentValue} onIonChange={e => {
+              <IonTextarea className="text-gray-900 " autofocus={true} value={currentValue} onIonChange={e => {
                 if (e.detail.value === undefined) return;
                 setCurrentValue(e.detail.value!);
               }} spellcheck={true} autoGrow={true} enterkeyhint="done" inputmode="text" maxlength={280} placeholder="What's poppin'?" required={true}></IonTextarea>

@@ -39,7 +39,7 @@ function Posts(props: PostProps) {
     const morePosts = () => {
         setTimeout(() => {
             dispatch(loadPosts());
-        }, 50);
+        }, 100);
         dispatch(updatePosition());
         dispatch(stopLoading());
     };
@@ -53,7 +53,7 @@ function Posts(props: PostProps) {
             if (posts.length === 1000) {
                 setInfiniteDisabled(true);
             }
-        }, 50);
+        }, 100);
     }
 
 
@@ -128,8 +128,9 @@ function Posts(props: PostProps) {
                         threshold="100px"
                         disabled={isInfiniteDisabled}
                     >
-                        <IonInfiniteScrollContent
-                            loadingSpinner="lines-small"
+                        <IonInfiniteScrollContent 
+                                loadingText="Getting more posts :)"
+                            loadingSpinner="dots"
                         ></IonInfiniteScrollContent>
                     </IonInfiniteScroll>
                 </ul>
