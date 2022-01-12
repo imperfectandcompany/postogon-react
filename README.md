@@ -1,11 +1,11 @@
 # Postogon Website Integration Feature
 
-##What technology stack is being used?
+## What technology stack is being used?
 Ionic Framework frontend with ReactJS under the hood to provide access to native APIs through a runtime environment known as CapacitorJS. 
 
 This frontend will consume the backend endpoints, which is built in php.
 
-##What features, however sub-optimal, already exist on Postogon?
+## What features, however sub-optimal, already exist on Postogon?
 - User registration,
 - User Login,
 - Create a post from the frontend and store in the backend,
