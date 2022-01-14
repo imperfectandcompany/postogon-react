@@ -56,12 +56,7 @@
 @media only screen and (max-width: 768px) {
   /* For mobile phones: */
   .bg::before {    
-    -webkit-animation-duration: 1s;
-    animation-duration: 1s;
-    -webkit-animation-duration: var(--animate-duration);
-    animation-duration: var(--animate-duration);
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;    
+  
     content: "";
     opacity: 0.25;
     width:1600px;

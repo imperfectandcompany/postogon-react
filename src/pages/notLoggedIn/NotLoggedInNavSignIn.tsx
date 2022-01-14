@@ -1,4 +1,4 @@
-import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonProgressBar, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonNote, IonPage, IonProgressBar, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
 import { useState } from 'react';
 import { useHistory } from 'react-router';
 import AuthContext from '../../AuthedContext';
@@ -72,7 +72,7 @@ function togglePassword(){
   return (
     <IonPage className={`${styles.bg}`} >
       <IonHeader>
-      {loading ?       <IonProgressBar type="indeterminate"></IonProgressBar>
+      {loading ? <IonProgressBar type="indeterminate"></IonProgressBar>
  : <IonProgressBar type="indeterminate" class="invisible"></IonProgressBar>}
         <IonToolbar color="none"  className={`${styles.toolbar}`} >
           <IonButtons slot="start">

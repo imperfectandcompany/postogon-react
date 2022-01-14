@@ -15,11 +15,11 @@ const NotLoggedInNavSignUp: React.FC = () => {
     return (
       <IonPage className={`${styles.bg}`} >
       <IonHeader>
-      <IonToolbar color="white" className={`${styles.toolbar}`} >
+      <IonToolbar color="none"  className={`${styles.toolbar}`} >
           <IonButtons slot="start">
-            <IonBackButton text="" />
+            <IonBackButton text="" color="white"/>
           </IonButtons>
-          <IonTitle>Sign Up</IonTitle>
+          <IonTitle color="white">Sign Up</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>

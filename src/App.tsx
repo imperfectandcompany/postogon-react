@@ -41,9 +41,13 @@ setupIonicReact({
 function App() {
   const [authLoading, setAuthLoading] = useState(true);
   const { authValues } = React.useContext(AuthContext);
-
+  const toggleDarkModeHandler = () => {
+    document.body.classList.toggle("dark");
+  };
   const { verify } = React.useContext(AuthContext);
 
+  toggleDarkModeHandler();
+  
   useEffect(() => {
     const token = getToken();
     if (!token) {

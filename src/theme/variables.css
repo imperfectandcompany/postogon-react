@@ -221,7 +221,7 @@ ion-refresher ion-refresher-content {
 
 ion-refresher.refresher-active { z-index: 1!important; }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   /*
    * Dark Colors
    * -------------------------------------------

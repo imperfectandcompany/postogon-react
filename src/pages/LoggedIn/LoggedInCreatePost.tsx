@@ -54,7 +54,6 @@ const LoggedInCreatePost: React.FC = () => {
     }
   }
 
-
   function postButton() {
     if (isLoading) {
       return (<IonButton fill="solid" expand="block" color="danger" className="font-semibold transition duration-200 rounded-md cursor-not-allowed btn focus:outline-none" disabled>
@@ -80,7 +79,7 @@ const LoggedInCreatePost: React.FC = () => {
         <IonHeader class="ion-no-border" translucent={true}>
           <IonToolbar color="white">
             <IonButtons slot="start">
-              <IonBackButton text="" />
+              <IonBackButton />
             </IonButtons>
             <IonTitle>Create Post</IonTitle>
           </IonToolbar>
@@ -104,7 +103,7 @@ const LoggedInCreatePost: React.FC = () => {
           <IonRow className="ion-padding-start ion-padding-end ion-padding-bottom ion-padding-top">
             <IonRow className="flex w-full ml-auto">
               {/*-- Segment with anchors --*/}
-              <IonSegment color="light" className="my-4" onIonChange={e => { setFeed(e.detail.value!) }} value={feed}>
+              <IonSegment color="dark" className="my-4" onIonChange={e => { setFeed(e.detail.value!) }} value={feed}>
                 <IonSegmentButton value="1">
                   <IonLabel>Public</IonLabel>
                 </IonSegmentButton>

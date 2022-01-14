@@ -8,13 +8,11 @@ import NotLoggedInNavSignIn from './NotLoggedInNavSignIn';
 
 const NotLoggedIn: React.FC<RouteComponentProps> = () => {
   return (
-    <IonPage>
     <IonRouterOutlet>
       <Route exact path="/" component={NotLoggedInNav} />
       <Route exact path="/signup" component={NotLoggedInNavSignUp} />
       <Route exact path="/signin" component={NotLoggedInNavSignIn} />
     </IonRouterOutlet>
-    </IonPage>
   );
 };
 

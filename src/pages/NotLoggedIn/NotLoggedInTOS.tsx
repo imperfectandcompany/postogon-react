@@ -1,4 +1,4 @@
-import { IonButtons, IonContent, IonHeader, IonIcon, IonModal, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonModal, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import styles from './NotLoggedInNav.module.css'; // Import css modules stylesheet as styles
 import { chevronDown } from 'ionicons/icons';
 
@@ -41,7 +41,11 @@ function NotLoggedInNavTOS({ setShowTos, showTos }: any) {
       <IonHeader collapse="condense">
         <IonToolbar className={`${styles['modal-toolbar']}`}>
           <IonButtons slot="start" className="cursor-pointer focus:cursor-default" onClick={() => setShowTos(false)}>
-            <IonIcon slot="icon-only" color="white" icon={chevronDown} />
+          <IonButton expand="block" size="large"
+                             onClick={() => setShowTos(false)}
+            className="transition cursor-pointer select-none focus:select-none hover:text-gray-100 focus:text-opacity-50" color="white" fill="clear">     
+           <IonIcon slot="icon-only" color="white" icon={chevronDown} />
+</IonButton>        
           </IonButtons>
           <IonTitle color="white">Terms of Service</IonTitle>
         </IonToolbar>

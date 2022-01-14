@@ -4,7 +4,7 @@ import SinglePost from './Post/SinglePost';
 import api from "../../utils/API";
 import { getToken } from '../../utils/Common';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { IonAvatar, IonButton, IonFooter, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel, IonList, IonRefresher, IonRefresherContent, IonRippleEffect, IonRow, RefresherEventDetail, StackContext, useIonViewWillEnter } from '@ionic/react';
+import { IonAvatar, IonButton, IonFooter, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel, IonList, IonListHeader, IonRefresher, IonRefresherContent, IonRippleEffect, IonRow, IonSkeletonText, RefresherEventDetail, StackContext, useIonViewWillEnter } from '@ionic/react';
 import skeletonPost from './skeletonPost';
 import Loading from '../Loading/Loading';
 import CreatePost from '../Timeline/CreatePost';
@@ -71,6 +71,28 @@ function Posts(props: PostProps) {
         dispatch(fetchPosts(props.type, props.feed));
     }, [props.feed]);
 
+    const loadSkeletonHeader = (title:string) => {
+        return (
+            <IonListHeader>
+                <IonLabel>
+                    <div className=" custom-skeleton">
+                        <IonSkeletonText animated style={{ width: '37%' }} />
+                    </div>
+                </IonLabel>
+            </IonListHeader>
+        )
+    }
+
+    const loadHeader = (title:string) => {
+        return (
+            <IonListHeader>
+                <IonLabel>
+                {title}
+                </IonLabel>
+            </IonListHeader>
+        )
+    }
+
     //function to load skeleton posts
     function loadSkeletonPosts(n: number) {
         return (
@@ -86,15 +108,23 @@ function Posts(props: PostProps) {
         )
     }
 
+    function loadSkeletonView(amt: number, header: string): JSX.Element {
+        return <>{
+            loadSkeletonHeader(header)}{
+            loadSkeletonPosts(amt) }  </>
+      }
+
+
     //if loading is true and post type is not id
     if (isLoading && !props.id && loadedPosts.length <= 0) {
-        return loadSkeletonPosts(8);
+        return loadSkeletonView(8, "Recent posts");
     }
 
     //if loading is true and post type is id
     if (isLoading && props.id && loadedPosts.length <= 0) {
-        return loadSkeletonPosts(1);
+        return loadSkeletonView(1, "Post");
     }
+
 
 
     const AddPostToLikes = (e: React.MouseEvent<HTMLIonIconElement, MouseEvent> | React.MouseEvent<HTMLIonButtonElement, MouseEvent>, feed: string, postID: string,) => {
@@ -116,20 +146,21 @@ function Posts(props: PostProps) {
                             refreshingSpinner="dots">
                         </IonRefresherContent>
                     </IonRefresher>
-                    <IonList className="relative bg-white divide-y shadow-lg divide-gray-50 ">
-                            <div className="snap-y snap-mandatory">
+                    <IonList className="relative bg-white divide-y shadow-lg divide-gray-50">
+                        <div className="snap-y snap-mandatory">
+                            {isLoading ? null: loadHeader("Recent posts")}
                             {posts && posts.length > 0 && !isLoading ? loadedPosts.map((post: IPost, index: number) =>
-                                            <SinglePost key={index} PostedOn={post.PostedOn} PostBody={post.PostBody} PostedBy={post.PostedBy} Likes={post.Likes} PostId={post.PostId} />
-                            ) : loadSkeletonPosts(loadedPosts.length)}
-                                        </div>
+                              <SinglePost key={index} PostedOn={post.PostedOn} PostBody={post.PostBody} PostedBy={post.PostedBy} Likes={post.Likes} PostId={post.PostId} />
+                           ) : loadSkeletonPosts(loadedPosts.length)}
+                        </div>
                     </IonList>
                     <IonInfiniteScroll
                         onIonInfinite={loadData}
                         threshold="100px"
                         disabled={isInfiniteDisabled}
                     >
-                        <IonInfiniteScrollContent 
-                                loadingText="Getting more posts :)"
+                        <IonInfiniteScrollContent
+                            loadingText="Getting more posts :)"
                             loadingSpinner="dots"
                         ></IonInfiniteScrollContent>
                     </IonInfiniteScroll>

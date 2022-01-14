@@ -10,7 +10,7 @@ const NotLoggedInNav: React.FC = () => {
 
   return (
     <IonPage className={`${styles.bg}`}>
-      <IonContent >
+      <IonContent fullscreen={true} >
 
 
 
@@ -32,7 +32,7 @@ const NotLoggedInNav: React.FC = () => {
             </h1>
 
             <div className="ion-margin-bottom">
-              <IonButton className="flex font-bold" color="white" fill="outline" routerLink="/signin" routerDirection="forward">
+              <IonButton className="flex font-bold" color="white" fill="outline" routerLink="/signin" routerDirection="forward" >
                 <IonIcon slot="start" icon={mail} />
                 Sign in with email
               </IonButton>

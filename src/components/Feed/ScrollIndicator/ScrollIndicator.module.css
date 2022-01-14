@@ -9,30 +9,12 @@
     margin-top: 0.75rem;
 }
 
-.divider{
-    --padding-bottom: 0px;
-    --padding-top: 0px;
-    --padding-start: 0px;
-    --padding-end: 0px;
-    --inner-padding-top: 0px;
-    --inner-padding-bottom: 0px;
-    --inner-padding-end: 0px;
-    --inner-padding-start: 0px;
-    --color: #000000 !important;
-}
-
-.IonItemColor{
-    --border-color: #f0f0f0 !important;
-}
-
 .post-content {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-box-orient: vertical;
 }
-
-
 
 .post-footer {
     align-content: center;
