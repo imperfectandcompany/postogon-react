@@ -47,7 +47,7 @@ function App() {
   const { verify } = React.useContext(AuthContext);
 
   toggleDarkModeHandler();
-  
+
   useEffect(() => {
     const token = getToken();
     if (!token) {
@@ -72,16 +72,13 @@ function App() {
   return (
     <IonApp>
       <IonReactRouter>
-        
-      <IonRouterOutlet>
-      <Route
-  path="/"
-  render={(props) => {
-    return !authValues.authenticated && !getToken() ? <NotLoggedIn {...props} /> : <LoggedIn {...props} />;
-  }}
-/>
-              <Route render={() => <Redirect to="/" />} />
-        </IonRouterOutlet>
+        <Route
+          path="/"
+          render={(props) => {
+            return !authValues.authenticated && !getToken() ? <NotLoggedIn {...props} /> : <LoggedIn {...props} />;
+          }}
+        />
+        <Route render={() => <Redirect to="/" />} />
       </IonReactRouter>
     </IonApp>
   );

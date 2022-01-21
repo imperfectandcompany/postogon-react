@@ -4,12 +4,12 @@ import SinglePost from './Post/SinglePost';
 import api from "../../utils/API";
 import { getToken } from '../../utils/Common';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { IonAvatar, IonButton, IonFooter, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel, IonList, IonListHeader, IonRefresher, IonRefresherContent, IonRippleEffect, IonRow, IonSkeletonText, RefresherEventDetail, StackContext, useIonViewWillEnter } from '@ionic/react';
+import { IonAvatar, IonButton, IonFooter, IonHeader, IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel, IonList, IonListHeader, IonRefresher, IonRefresherContent, IonRippleEffect, IonSkeletonText, RefresherEventDetail, StackContext,  useIonViewDidEnter,  useIonViewDidLeave,  useIonViewWillEnter,  useIonViewWillLeave,  withIonLifeCycle } from '@ionic/react';
 import skeletonPost from './skeletonPost';
 import Loading from '../Loading/Loading';
 import CreatePost from '../Timeline/CreatePost';
 import MoreOptions from './MoreOptions';
-import { bookmarkOutline, paperPlaneOutline, chatbubblesOutline, heart, heartOutline } from 'ionicons/icons';
+import { bookmarkOutline, paperPlaneOutline, chatbubblesOutline, heart, heartOutline, chevronDownCircleOutline, arrowDownCircle, chevronDownCircle, chevronDownCircleSharp } from 'ionicons/icons';
 
 
 
@@ -29,19 +29,19 @@ function Posts(props: PostProps) {
     const [isLiked, setIsLiked] = useState(false);
 
 
+
+    
     const dispatch = useAppDispatch();
 
-    useIonViewWillEnter(() => {
-        loadPosts();
-    });
-
+    
+      
     //load more posts
     const morePosts = () => {
         setTimeout(() => {
             dispatch(loadPosts());
-        }, 100);
+            dispatch(stopLoading());            
+        }, 0);
         dispatch(updatePosition());
-        dispatch(stopLoading());
     };
 
     const loadData = (ev: any) => {
@@ -50,20 +50,18 @@ function Posts(props: PostProps) {
             morePosts();
             console.log('Loaded data');
             ev.target.complete();
-            if (posts.length === 1000) {
+            if (posts.length === loadedPosts.length-8) {
                 setInfiniteDisabled(true);
             }
-        }, 100);
+        }, 0);
     }
-
-
 
     function doRefresh(event: CustomEvent<RefresherEventDetail>) {
         //force refetch of posts, this called function itializes with isLoading as true and finishes with isLoading as false.
         dispatch(fetchPosts(props.type, props.feed));
         setTimeout(() => {
             event.detail.complete();
-        }, 1000);
+        }, 500);
     }
 
     //fetch posts based on if the feed changes, this called function itializes with isLoading as true and finishes with isLoading as false.
@@ -97,13 +95,12 @@ function Posts(props: PostProps) {
     function loadSkeletonPosts(n: number) {
         return (
             <div>
-                <ul className="">
-                    {[...Array(n)].map((object, i) => (
-                        <li key={i} >
+                    {[...Array(n)].map((array, index) => (
+                        <div key={index} >
                             {skeletonPost()}
-                        </li>
+                        </div>
                     ))}
-                </ul>
+
             </div>
         )
     }
@@ -130,7 +127,6 @@ function Posts(props: PostProps) {
     const AddPostToLikes = (e: React.MouseEvent<HTMLIonIconElement, MouseEvent> | React.MouseEvent<HTMLIonButtonElement, MouseEvent>, feed: string, postID: string,) => {
         e.stopPropagation();
         //add post like to backend...
-
         setIsLiked(isLiked ? false : true);
     }
 
@@ -142,25 +138,27 @@ function Posts(props: PostProps) {
             <div>
                 <ul>
                     <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
-                        <IonRefresherContent
-                            refreshingSpinner="dots">
-                        </IonRefresherContent>
+                    <IonRefresherContent
+          pullingIcon={arrowDownCircle}
+          pullingText="Pull to refresh"
+          refreshingSpinner="dots"
+          refreshingText="Refreshing...">
+        </IonRefresherContent>
                     </IonRefresher>
                     <IonList className="relative bg-white divide-y shadow-lg divide-gray-50">
                         <div className="snap-y snap-mandatory">
                             {isLoading ? null: loadHeader("Recent posts")}
                             {posts && posts.length > 0 && !isLoading ? loadedPosts.map((post: IPost, index: number) =>
                               <SinglePost key={index} PostedOn={post.PostedOn} PostBody={post.PostBody} PostedBy={post.PostedBy} Likes={post.Likes} PostId={post.PostId} />
-                           ) : loadSkeletonPosts(loadedPosts.length)}
+                           ) : loadSkeletonView(loadedPosts.length+8, "Still Loading")}
                         </div>
                     </IonList>
                     <IonInfiniteScroll
                         onIonInfinite={loadData}
-                        threshold="100px"
+                        threshold="99%"
                         disabled={isInfiniteDisabled}
                     >
                         <IonInfiniteScrollContent
-                            loadingText="Getting more posts :)"
                             loadingSpinner="dots"
                         ></IonInfiniteScrollContent>
                     </IonInfiniteScroll>

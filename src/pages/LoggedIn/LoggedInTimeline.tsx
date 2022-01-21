@@ -1,20 +1,26 @@
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonMenuToggle, IonButtons, IonSearchbar, NavContext, useIonViewWillEnter, useIonViewWillLeave, IonSegment, IonSegmentButton, IonAvatar, IonItem, IonCard, IonCardContent, IonCol, IonRow, IonNote, IonSplitPane, IonProgressBar, ScrollDetail, IonLabel } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonMenuToggle, IonButtons, IonSearchbar, NavContext, useIonViewWillEnter, useIonViewWillLeave, IonSegment, IonSegmentButton, IonAvatar, IonItem, IonCard, IonCardContent, IonCol, IonRow, IonNote, IonSplitPane, IonProgressBar, ScrollDetail, IonLabel, IonList } from '@ionic/react';
 import { profile } from 'console';
 import { addCircle, addCircleOutline, addCircleSharp, addOutline, bookmarkOutline, chatbubblesOutline, chevronDown, heart, heartOutline, paperPlaneOutline, pulseOutline, searchOutline } from 'ionicons/icons';
 import React from 'react';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import MoreOptions from '../../components/Feed/MoreOptions';
 import Posts from '../../components/Feed/Posts';
 import Loading from '../../components/Loading/Loading';
 import CreatePost from '../../components/Timeline/CreatePost';
 import { fetchPostsFeed, fetchPostsType } from '../../features/post/postSlice';
+import { showTabs } from './LoggedIn';
 
-const LoggedInTimeline: React.FC = () => {
+interface UserDetailPageProps
+  extends RouteComponentProps<{
+    id: fetchPostsFeed;
+  }> {}
 
-  const [isVisible, setIsVisible] = useState(true);
+const LoggedInTimeline: React.FC<UserDetailPageProps> = ({ match }) => {
 
-
-
+  
+  useIonViewWillEnter(() => showTabs());
+  
   const [feed, setFeed] = useState(fetchPostsFeed.PUBLIC);
   const logoColor = {
     filter: 'brightness(0.1)',
@@ -24,9 +30,6 @@ const LoggedInTimeline: React.FC = () => {
   const scrollToTop = () => {
     contentRef.current && contentRef.current.scrollToTop(500);
   };
-
-  const [scroll, setScroll] = React.useState(0.00);
-
 
 
   useEffect(() => {
@@ -42,15 +45,7 @@ const LoggedInTimeline: React.FC = () => {
   );
 
 
-  function testFunc(e: CustomEvent<ScrollDetail>) {
-    const html = document.documentElement;
-    const scrollPx = html.scrollTop;
-    const winHeightPx = html.scrollHeight - html.clientHeight;
-    const scrolled = (scrollPx / winHeightPx) * 100;
 
-    setScroll(scrolled);
-    console.log(e.detail.scrollTop);
-  }
 
 
   return (
@@ -76,10 +71,9 @@ const LoggedInTimeline: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent fullscreen={true} ref={contentRef} scrollEvents={true}
-          onIonScroll={(e) => testFunc}
+         
           color="white">
-
-
+            
           <IonHeader collapse="condense" translucent={true} color="white">
             <IonToolbar color="white">
               <IonTitle className="backdrop-blur-sm ring-1 ring-gray-400/10" size="large">
@@ -87,7 +81,7 @@ const LoggedInTimeline: React.FC = () => {
               </IonTitle>
             </IonToolbar>
             <IonToolbar color="white">
-            <IonItem slot="start" lines="none">
+            <IonItem slot="start" lines="none" >
             <IonSegment value={feed} color="dark">
                     <IonSegmentButton value="public" onClick={() => setFeed(fetchPostsFeed.PUBLIC)} className={feed === fetchPostsFeed.PUBLIC ? "text-gray-800" : "text-gray-400"}> Public </IonSegmentButton>
                     <IonSegmentButton value="private" onClick={() => setFeed(fetchPostsFeed.PRIVATE)} className={feed === fetchPostsFeed.PRIVATE ? "text-gray-800" : "text-gray-400"}> Private </IonSegmentButton>
@@ -104,7 +98,6 @@ const LoggedInTimeline: React.FC = () => {
         </IonContent>
       </IonPage>
     </>
-
   );
 };
 

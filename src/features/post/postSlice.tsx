@@ -59,7 +59,9 @@ export const postSlice = createSlice({
       //initialize post position in case of refresh
       state.lastPosition = state.perPage;
       //all posts
-      state.posts = action.payload;
+      state.posts = action.payload; 
+      //sort by earliest timestamp for chronological order!
+      state.posts = state.posts.sort((x, y) => y.PostedOn - x.PostedOn);
       //get the first 8 posts
       state.loadedPosts = state.posts.slice(0, state.perPage);
       state.isLoading = false;
@@ -94,9 +96,11 @@ export enum fetchPostsType{
   ID='ID'
 }
 
-export enum fetchPostsFeed{
-  PUBLIC='public',
-  PRIVATE='private',
+
+export enum fetchPostsFeed {
+  PUBLIC = 'public',
+  PRIVATE = 'private',
+  result = "result"
 }
 
 // Action creators are generated for each case reducer function
@@ -106,7 +110,7 @@ export const selectIsLiked = (state: RootState) => state.post.liked
 export default postSlice.reducer
 
 //thunk to  handle side effects, if userSuccess goes through then it will return a new object in the reducer
-export const fetchPosts = (type:fetchPostsType, feed?:fetchPostsFeed, id?:number, username?:string) => async (dispatch:Dispatch) => {
+export const fetchPosts = (type:fetchPostsType, feed?:string, id?:number, username?:string) => async (dispatch:Dispatch) => {
   const token = getToken();
   dispatch(startLoading());
   try {

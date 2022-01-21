@@ -1,5 +1,6 @@
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonMenuToggle, IonButtons, IonFooter, IonCol, IonRow, IonSpinner, IonItem, IonList, IonListHeader, useIonPopover, IonCard, IonCardContent, IonLabel, IonSegment, IonSegmentButton, IonTextarea, IonBackButton, IonRedirect, NavContext } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonMenuToggle, IonButtons, IonFooter, IonCol, IonRow, IonSpinner, IonItem, IonList, IonListHeader, useIonPopover, IonCard, IonCardContent, IonLabel, IonSegment, IonSegmentButton, IonTextarea, IonBackButton, IonRedirect, NavContext, ScrollDetail } from '@ionic/react';
 import { chevronBack, searchOutline } from 'ionicons/icons';
+import React from 'react';
 import { useCallback, useContext, useState } from 'react';
 import { useHistory } from 'react-router';
 import Posts from '../../components/Feed/Posts';
@@ -11,12 +12,22 @@ import { getToken } from '../../utils/Common';
 const LoggedInProfile: React.FC = () => {
   const [feed, setFeed] = useState(fetchPostsFeed.PUBLIC);
 
+  const [scroll, setScroll] = React.useState(0.00);
+  function testFunc(e: CustomEvent<ScrollDetail>) {
+    const html = document.documentElement;
+    const scrollPx = html.scrollTop;
+    const winHeightPx = html.scrollHeight - html.clientHeight;
+    const scrolled = (scrollPx / winHeightPx) * 100;
+
+    setScroll(scrolled);
+    console.log(e.detail.scrollTop);
+  }
 
   return (
     <>
       <IonPage id="main-content" className="bg-white">
 
-        <IonContent fullscreen={true} color="white">
+        <IonContent fullscreen={true} color="white" onScroll={()=>testFunc}>
         <article className="p-4 text-black border bg-gray-white rounded-b-xl">
   <div className="flex items-center">
     <img src="https://unavatar.now.sh/twitter/andrewmcodes" alt="Andrew Mason" className="w-16 h-16 rounded-full" />

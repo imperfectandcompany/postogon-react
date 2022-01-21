@@ -63,7 +63,7 @@ const HomeMenu: React.FC = () => {
             <IonLabel>Sign out</IonLabel>
           </IonItem>
           <IonItem lines="none" href="https://imperfectandcompany.com" target="_blank" rel="noreferrer noopener">
-            <IonIcon slot="start" name="open-outline" size="small"></IonIcon>
+            <IonIcon slot="start" size="small"></IonIcon>
             <IonLabel><strong>imperfe</strong></IonLabel>
           </IonItem>
         </IonList>

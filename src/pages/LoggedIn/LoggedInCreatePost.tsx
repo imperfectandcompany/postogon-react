@@ -1,37 +1,28 @@
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonMenuToggle, IonButtons, IonFooter, IonCol, IonRow, IonSpinner, IonItem, IonList, IonListHeader, useIonPopover, IonCard, IonCardContent, IonLabel, IonSegment, IonSegmentButton, IonTextarea, IonBackButton, IonRedirect, NavContext } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonMenuToggle, IonButtons, IonFooter, IonCol, IonRow, IonSpinner, IonItem, IonList, IonListHeader, useIonPopover, IonCard, IonCardContent, IonLabel, IonSegment, IonSegmentButton, IonTextarea, IonBackButton, IonRedirect, NavContext, useIonViewWillEnter } from '@ionic/react';
 import { chevronBack, searchOutline } from 'ionicons/icons';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import Posts from '../../components/Feed/Posts';
 import { useAddNewPostMutation } from '../../features/api/apiSlice';
 import { fetchPostsFeed, fetchPostsType } from '../../features/post/postSlice';
 import { getToken } from '../../utils/Common';
+import { hideTabs } from './LoggedIn';
 
 const LoggedInCreatePost: React.FC = () => {
 
   //all data is handled in this parent component
   const [currentValue, setCurrentValue] = useState("");// managing textArea value
   //called from child component to update current value
-
-
-  const handleChange = (value: string) => {
-    { setCurrentValue(value) };
-  };
+  
+  useIonViewWillEnter(() => hideTabs());
 
   const [addNewPost, { isLoading, isSuccess }] = useAddNewPostMutation();
 
   const canSave = [currentValue, getToken()].every(Boolean) && !isLoading
 
-  const [postSubmitted, setPostSubmitted] = useState(false);// managing textArea value
-
-  const router = document.querySelector('ion-router');
   const routeRedirect = document.createElement('IonRedirect');
   routeRedirect.setAttribute('from', '*');
   routeRedirect.setAttribute('to', '/home');
-
-  if (postSubmitted) {
-    router?.appendChild(routeRedirect);
-  }
 
   const { navigate } = useContext(NavContext);
 
@@ -40,7 +31,6 @@ const LoggedInCreatePost: React.FC = () => {
     () => navigate('/home', 'back'),
     [navigate]
   );
-
 
   const onSavePostClicked = async (to_whom: number) => {
     if (canSave) {
@@ -78,30 +68,26 @@ const LoggedInCreatePost: React.FC = () => {
       <IonPage id="main-content" className="bg-white">
         <IonHeader class="ion-no-border" translucent={true}>
           <IonToolbar color="white">
-            <IonButtons slot="start">
-              <IonBackButton />
-            </IonButtons>
+          <IonButtons slot="start">
+          <IonBackButton defaultHref="/" />
+        </IonButtons>
             <IonTitle>Create Post</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent fullscreen={true} color="white">
+        <IonContent fullscreen={false} forceOverscroll={false} color="white">
           <IonCard color="White" className="shadow-none ">
             <IonCardContent>
-              <IonTextarea className="text-gray-900 " autofocus={true} value={currentValue} onIonChange={e => {
+              <IonTextarea className="text-gray-900 " value={currentValue} onIonChange={e => {
                 if (e.detail.value === undefined) return;
                 setCurrentValue(e.detail.value!);
               }} spellcheck={true} autoGrow={true} enterkeyhint="done" inputmode="text" maxlength={280} placeholder="What's poppin'?" required={true}></IonTextarea>
-            </IonCardContent>
             <IonRow className="justify-end">
               <div className="text-xs font-semibold text-gray-400 count"><span>{currentValue.length}</span> / <span>280</span></div>
-            </IonRow>
-
+            </IonRow>            
+            </IonCardContent>
           </IonCard>
         </IonContent>
-
-        <IonFooter className="bg-white border-2 border-t border-gray-100 ion-padding-bottom">
-          <IonRow className="ion-padding-start ion-padding-end ion-padding-bottom ion-padding-top">
-            <IonRow className="flex w-full ml-auto">
+        <IonFooter className="bg-white border-2 border-t border-gray-100 ">
               {/*-- Segment with anchors --*/}
               <IonSegment color="dark" className="my-4" onIonChange={e => { setFeed(e.detail.value!) }} value={feed}>
                 <IonSegmentButton value="1">
@@ -111,11 +97,7 @@ const LoggedInCreatePost: React.FC = () => {
                   <IonLabel>Private</IonLabel>
                 </IonSegmentButton>
               </IonSegment>
-            </IonRow>
-            <IonCol size="12">
               {postButton()}
-            </IonCol>
-          </IonRow>
         </IonFooter>
       </IonPage>
     </>

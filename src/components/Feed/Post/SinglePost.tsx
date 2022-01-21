@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react';
 import MoreOptions from '../MoreOptions';
 import { bookmarkOutline, chatbubbleEllipses, chatbubbleOutline, chatbubblesOutline, chevronBack, ellipseOutline, ellipsisHorizontal, ellipsisVertical, ellipsisVerticalCircle, ellipsisVerticalSharp, heart, heartOutline, optionsOutline, paperPlaneOutline, reload, sendOutline, shareOutline } from 'ionicons/icons';
-import { IonAvatar, IonBackButton, IonBadge, IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol, IonContent, IonFooter, IonHeader, IonIcon, IonItem, IonItemDivider, IonLabel, IonModal, IonNote, IonRippleEffect, IonRow, IonText, IonThumbnail, IonTitle, IonToolbar } from '@ionic/react';
 import styles from "./SinglePost.module.css"; // Import css modules stylesheet as styles
-import { IPost } from '../../../features/post/postSlice';
+import { IPost, startLoading, stopLoading } from '../../../features/post/postSlice';
 import Posts from '../Posts';
 import { render } from '@testing-library/react';
+import { useAppDispatch } from '../../../app/hooks';
+import { useIonViewWillLeave, IonModal, IonHeader, IonToolbar, IonButton, IonIcon, IonTitle, IonContent, IonCard, IonRow, IonCol, IonItem, IonAvatar, IonLabel, IonCardContent, IonNote, IonFooter, IonThumbnail } from '@ionic/react';
 
 
 
@@ -21,6 +22,11 @@ function SinglePost(props: IPost) {
 
         setIsLiked(isLiked ? false : true);
     }
+    const dispatch = useAppDispatch();
+
+    useIonViewWillLeave(() => {
+        dispatch(stopLoading());
+    });
 
 
     const [isCollapsed, setCollapsed] = useState(false);
@@ -88,7 +94,6 @@ function SinglePost(props: IPost) {
                     <IonCardContent>
                         <div className={`${styles['post-content']}` + " antialiased text-gray-900 sm:subpixel-antialiased md:antialiased"}>
                             {trimText(`${props.PostBody}`)}
-
                             <IonRow className="justify-end">
                                 <IonNote className="mt-3 text-xs text-gray-400 transition hover:text-gray-500">School '22, Studying Engineering 💻</IonNote>
                             </IonRow>    </div>
@@ -126,13 +131,13 @@ function SinglePost(props: IPost) {
 
     const renderCard = () => {
         return (
-            <div className="flex flex-col cursor-default hover:cursor-pointer active:cursor-default active:bg-gray-100 " onClick={() => (setViewMoreDetails(true))}>
+            <div className="flex flex-col cursor-default ios ion-activatable hover:cursor-pointer active:cursor-default active:bg-gray-100 " onClick={() => (setViewMoreDetails(true))}>
                 <div className="sticky top-0 z-40 flex items-center text-sm font-semibold text-gray-900 snap-start bg-gray-50/5 backdrop-blur-sm ring-1 ring-gray-400/10">
                     <IonHeader>
                         <IonItem lines="none">
                             <IonThumbnail slot="start" className="w-12 h-12">
-                                <img className="rounded-full shrink-0" src="https://via.placeholder.com/150" alt="" />
-                            </IonThumbnail>
+                            <img className="w-12 h-12 rounded-full shrink-0" src="https://via.placeholder.com/150" alt="" />
+                                                            </IonThumbnail>
                             <IonLabel color="dark">
                                 <span className="font-bold text-gray-800">{props.PostedBy}</span>
                                 <div><span className="text-xs text-gray-300">{props.PostedOn} • 4h ago</span></div>
@@ -145,7 +150,7 @@ function SinglePost(props: IPost) {
                 </div>
                 <IonCardContent className="sticky inset-0 z-30 px-4 py-3 text-gray-900 snap-start bg-gray-50/10 backdrop-blur-sm ring-1 ring-gray-300/10">
                     <div className="ml-2 mr-2">
-                        <p className=" ion-padding-bottom">{trimText(`${props.PostBody}`)}</p>
+                        <div className=" ion-padding-bottom">{trimText(`${props.PostBody}`)}</div>
                         <IonRow className="justify-end ion-padding-top">
                             <IonNote className="text-xs text-gray-400 transition text-light hover:text-gray-500">School '22, Studying Engineering 💻</IonNote>
                         </IonRow>
@@ -236,7 +241,7 @@ function SinglePost(props: IPost) {
 
             <IonCard id={`${props.PostId}`} button={!viewMoreDetails} class={`${styles['removeBorderRadius']}` + " ion-no-margin"}>
                 <IonItem lines="none">
-                    <IonThumbnail slot="start">
+                    <IonThumbnail slot="start" className="w-8 h-8">
                         <img className="rounded-full shrink-0" src="https://via.placeholder.com/150" alt="" />
                     </IonThumbnail>
                     <IonLabel color="dark">
@@ -247,15 +252,15 @@ function SinglePost(props: IPost) {
                         <MoreOptions isOwner={false} />
                     </div>
                 </IonItem>
-                <IonItem >
-                    <IonThumbnail slot="start">
+                <IonItem class={`${styles.IonItemColor}`}>
+                <IonThumbnail slot="start" className="w-8 h-8">
                     </IonThumbnail>
                     <IonLabel color="dark">
                         post content
                         <IonRow className="justify-end">
                             <IonNote className="text-xs text-gray-400 transition text-light hover:text-gray-500">School '22, Studying Engineering 💻</IonNote>
                         </IonRow>
-                        <IonRow className="justify-start">
+                        <IonRow className="flex-row-reverse justify-around mt-6 ">
                             <IonButton fill="clear" color={isLiked ? "danger" : "medium"} onClick={(e) => AddPostToLikes(e, "public", "4")}>
                                 <IonIcon icon={isLiked ? heart : heartOutline} />
                                 {isLiked ? <IonIcon color="danger" style={{ position: "absolute", display: `${isLiked ? "" : "none"}` }} className="animate__animated animate__fadeOutTopRight" icon={heart} /> : null}
@@ -272,7 +277,6 @@ function SinglePost(props: IPost) {
                         </IonRow>
                     </IonLabel>
                 </IonItem>
-
             </IonCard>
         )
     }
@@ -327,6 +331,7 @@ function SinglePost(props: IPost) {
         <React.Fragment>
             {/* Card Modal */}
             {renderModal()}
+
             {renderCard()}
             {/* Post */}
         </React.Fragment>
