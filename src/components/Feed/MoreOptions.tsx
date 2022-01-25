@@ -69,7 +69,6 @@ buttons={[
 </IonActionSheet>
 
 <IonActionSheet
-            translucent={true}
 isOpen={showUserActionSheet}
 onDidDismiss={() => setShowUserActionSheet(false)}
 buttons={[

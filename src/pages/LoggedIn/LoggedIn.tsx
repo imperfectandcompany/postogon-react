@@ -1,4 +1,4 @@
-import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react';
+import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, useIonViewDidEnter } from '@ionic/react';
 import { getAllByPlaceholderText } from '@testing-library/react';
 import { addCircle, addCircleOutline, home, homeOutline, informationCircle, notifications, notificationsOutline, person, personOutline, search, searchOutline } from 'ionicons/icons';
 import { useRef, useState } from 'react';
@@ -7,6 +7,7 @@ import HomeMenu from './HomeMenu/HomeMenu';
 import LoggedInCreatePost from './LoggedInCreatePost';
 import LoggedInProfile from './LoggedInProfile';
 import LoggedInTimeline from './LoggedInTimeline';
+import styles from './LoggedIn.module.css'; // Import css modules stylesheet as styles
 
 
 //functions used in page components to hide or show tabs *mandatory//each
@@ -24,7 +25,21 @@ export function showTabs() {
     }
 }
 
+//necessary since translucent tab bar is absolute
+export function addPaddingToContent() {
+    setTimeout(() => {
+        const container = document.querySelector('ion-content');
+        if (container) {
+             container.style.setProperty('--padding-bottom', '44px');
+        }
+        });
+}
+
+
+
 const LoggedIn: React.FC<RouteComponentProps> = ({ match }) => {
+
+
     const tabs = [
         {
             name: "Home",
@@ -67,7 +82,6 @@ const LoggedIn: React.FC<RouteComponentProps> = ({ match }) => {
 
     return (
         <>
-            <HomeMenu></HomeMenu>
             <IonTabs onIonTabsDidChange={e => setActiveTab(e.detail.tab)}>
                 <IonRouterOutlet >
                     {tabs.map((tab, index) => {
@@ -81,12 +95,12 @@ const LoggedIn: React.FC<RouteComponentProps> = ({ match }) => {
                     </Route>
                     <Redirect exact from="/" to="/home" />
                 </IonRouterOutlet>
-                <IonTabBar slot="bottom">
+                <IonTabBar slot="bottom" className={`${styles['transparent']}`} class="ion-no-border"  translucent={true} >
                     {tabs.map((tab, barIndex) => {
                         const active = tab.name === activeTab;
                         return (
-                            <IonTabButton key={`tab_${barIndex}`} tab={tab.name} href={tab.url}>
-                                <IonIcon icon={active ? tab.activeIcon : tab.icon} />
+                            <IonTabButton className={`${styles['tabbutton']}`} key={`tab_${barIndex}`} tab={tab.name} href={tab.url}>
+                                <IonIcon color="dark" icon={active ? tab.activeIcon : tab.icon} />
                             </IonTabButton>
                         );
                     })}

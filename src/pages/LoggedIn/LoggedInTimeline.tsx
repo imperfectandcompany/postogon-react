@@ -9,7 +9,7 @@ import Posts from '../../components/Feed/Posts';
 import Loading from '../../components/Loading/Loading';
 import CreatePost from '../../components/Timeline/CreatePost';
 import { fetchPostsFeed, fetchPostsType } from '../../features/post/postSlice';
-import { showTabs } from './LoggedIn';
+import { addPaddingToContent, showTabs } from './LoggedIn';
 
 interface UserDetailPageProps
   extends RouteComponentProps<{
@@ -20,6 +20,8 @@ const LoggedInTimeline: React.FC<UserDetailPageProps> = ({ match }) => {
 
   
   useIonViewWillEnter(() => showTabs());
+  useIonViewWillEnter(() => addPaddingToContent());
+
   
   const [feed, setFeed] = useState(fetchPostsFeed.PUBLIC);
   const logoColor = {
@@ -44,15 +46,11 @@ const LoggedInTimeline: React.FC<UserDetailPageProps> = ({ match }) => {
     [navigate]
   );
 
-
-
-
-
   return (
     <>
-      <IonPage id="main-content" className="bg-white">
+      <IonPage id="main-content" className="overflow-visible bg-white" color="white">
         <IonHeader translucent={true}>
-          <IonToolbar class="ion-no-border"  >
+          <IonToolbar class="ion-no-border" color="transparent" >
             <IonButtons slot="start">
               <IonButton color="transparent" size="small">
                 <img
@@ -64,16 +62,14 @@ const LoggedInTimeline: React.FC<UserDetailPageProps> = ({ match }) => {
             </IonButtons>
             <IonTitle><IonButton onClick={() => setFeed(fetchPostsFeed.PUBLIC)} color="clear" fill="clear" className={feed === fetchPostsFeed.PUBLIC ? "font-bold text-black " : "text-black  "}>Public</IonButton><IonButton onClick={() => setFeed(fetchPostsFeed.PRIVATE)} color="clear" fill="clear" className={feed === fetchPostsFeed.PRIVATE ? "font-bold text-black " : "text-black font-medium"}>Private</IonButton></IonTitle>
             <IonButtons slot="end">
-              <IonButton fill="clear" onClick={() => redirect()}>
-                <IonIcon className="text-red-500 dark:text-white" icon={addCircleSharp}></IonIcon>
+              <IonButton fill="clear" color="primary" onClick={() => redirect()}>
+                <IonIcon className="text-red-500" icon={addCircleSharp}></IonIcon>
               </IonButton>
             </IonButtons>
           </IonToolbar>
         </IonHeader>
         <IonContent fullscreen={true} ref={contentRef} scrollEvents={true}
-         
           color="white">
-            
           <IonHeader collapse="condense" translucent={true} color="white">
             <IonToolbar color="white">
               <IonTitle className="backdrop-blur-sm ring-1 ring-gray-400/10" size="large">
