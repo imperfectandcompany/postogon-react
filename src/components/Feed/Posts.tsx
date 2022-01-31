@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchPosts, fetchPostsFeed, fetchPostsType, initialState, IPost, loadPosts, startLoading, stopLoading, updateLike, updatePosition } from '../../features/post/postSlice';
+import { fetchPosts, fetchPostsFeed, fetchPostsType, hasError, initialState, IPost, loadPosts, selectAllPosts, startLoading, stopLoading, updateLike, updatePosition } from '../../features/post/postSlice';
 import SinglePost from './Post/SinglePost';
 import api from "../../utils/API";
 import { getToken } from '../../utils/Common';
@@ -10,8 +10,7 @@ import Loading from '../Loading/Loading';
 import CreatePost from '../Timeline/CreatePost';
 import MoreOptions from './MoreOptions';
 import { bookmarkOutline, paperPlaneOutline, chatbubblesOutline, heart, heartOutline, chevronDownCircleOutline, arrowDownCircle, chevronDownCircle, chevronDownCircleSharp } from 'ionicons/icons';
-
-
+import { useDispatch, useSelector } from 'react-redux';
 
 interface PostProps {
     feed: fetchPostsFeed;
@@ -22,18 +21,24 @@ interface PostProps {
 
 function Posts(props: PostProps) {
 
-    const loadedPosts = useAppSelector(state => state.post.loadedPosts)
-    const posts = useAppSelector(state => state.post.posts)
+    const loadedPosts = useAppSelector(state => state.post.loadedPosts);
+    const posts = useAppSelector(state => state.post.posts);
+    const error = useAppSelector(state => state.post.error);
+    const feed = useAppSelector(state => state.post.feed);
     const isLoading = useAppSelector(state => state.post.isLoading)
     const [isInfiniteDisabled, setInfiniteDisabled] = useState(false);
-    const [isLiked, setIsLiked] = useState(false);
 
 
+    const dispatch = useDispatch();
 
-    
-    const dispatch = useAppDispatch();
+    const postStatus = useAppSelector(state => state.post.status);
 
-    
+      useEffect(() => {
+    if (postStatus === 'idle') {
+      dispatch(startLoading());
+      dispatch(fetchPosts(props.feed));
+    }
+  }, [postStatus, dispatch])
       
     //load more posts
     const morePosts = () => {
@@ -58,7 +63,7 @@ function Posts(props: PostProps) {
 
     function doRefresh(event: CustomEvent<RefresherEventDetail>) {
         //force refetch of posts, this called function itializes with isLoading as true and finishes with isLoading as false.
-        dispatch(fetchPosts(props.type, props.feed));
+        dispatch(fetchPosts(props.feed));
         setTimeout(() => {
             event.detail.complete();
         }, 500);
@@ -66,7 +71,7 @@ function Posts(props: PostProps) {
 
     //fetch posts based on if the feed changes, this called function itializes with isLoading as true and finishes with isLoading as false.
     useEffect(() => {
-        dispatch(fetchPosts(props.type, props.feed));
+        dispatch(fetchPosts(props.feed));
     }, [props.feed]);
 
     const loadSkeletonHeader = (title:string) => {
@@ -112,29 +117,26 @@ function Posts(props: PostProps) {
       }
 
 
-    //if loading is true and post type is not id
-    if (isLoading && !props.id && loadedPosts.length <= 0) {
-        return loadSkeletonView(8, "Recent posts");
+    let content
+
+    if (postStatus === 'loading') {
+      content = loadSkeletonView(loadedPosts.length+8, "Still Loading");
+
     }
-
-    //if loading is true and post type is id
-    if (isLoading && props.id && loadedPosts.length <= 0) {
-        return loadSkeletonView(1, "Post");
+    if(isLoading){
+        content = loadSkeletonView(loadedPosts.length+8, "Still Loading");
     }
-
-
-
-    const AddPostToLikes = (e: React.MouseEvent<HTMLIonIconElement, MouseEvent> | React.MouseEvent<HTMLIonButtonElement, MouseEvent>, feed: string, postID: string,) => {
-        e.stopPropagation();
-        //add post like to backend...
-        setIsLiked(isLiked ? false : true);
+    else if (postStatus === 'succeeded') {
+      content = loadedPosts.map((post, index) => (
+        <SinglePost key={index} Comments={post.Comments} PostedOn={post.PostedOn} PostBody={post.PostBody} PostedBy={post.PostedBy} Likes={post.Likes} PostId={post.PostId} posts={[]} IsLiked={post.IsLiked} />
+      ))
+    } else if (postStatus === 'failed') {
+        dispatch(hasError(error))
+      content = <div>{error}</div>
     }
-
 
     return (
         <React.Fragment>
-
-
             <div>
                 <ul>
                     <IonRefresher slot="fixed" onIonRefresh={doRefresh}>
@@ -147,10 +149,8 @@ function Posts(props: PostProps) {
                     </IonRefresher>
                     <IonList className="relative bg-white divide-y shadow-lg divide-gray-50">
                         <div className="snap-y snap-mandatory">
-                            {isLoading ? null: loadHeader("Recent posts")}
-                            {posts && posts.length > 0 && !isLoading ? loadedPosts.map((post: IPost, index: number) =>
-                              <SinglePost key={index} PostedOn={post.PostedOn} PostBody={post.PostBody} PostedBy={post.PostedBy} Likes={post.Likes} PostId={post.PostId} />
-                           ) : loadSkeletonView(loadedPosts.length+8, "Still Loading")}
+                            {postStatus === "loading" ? null: loadHeader("Recent posts")}
+                            {content}
                         </div>
                     </IonList>
                     <IonInfiniteScroll

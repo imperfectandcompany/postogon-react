@@ -44,9 +44,19 @@ export const apiSlice = createApi({
       }),
       //this basically says that the post tag is invalidated everytime a mutation happens
       invalidatesTags: ['Post']
-    })    
+    }),
+    updatePostLike: builder.mutation({
+      query: likePost => ({
+        url: '/updatepostlike',
+        method: 'POST',
+        // Include the entire post object as the body of the request
+        body: likePost
+      }),
+      //this basically says that the post tag is invalidated everytime a mutation happens
+      invalidatesTags: ['Post']
+    })  
   })
 })
 
 // Export the auto-generated hook for the `getPosts` query endpoint
-export const { useGetTimelineFeedQuery, useAddNewPostMutation } = apiSlice
+export const { useGetTimelineFeedQuery, useUpdatePostLikeMutation, useAddNewPostMutation } = apiSlice

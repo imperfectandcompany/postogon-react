@@ -100,7 +100,7 @@ const LoggedIn: React.FC<RouteComponentProps> = ({ match }) => {
                         const active = tab.name === activeTab;
                         return (
                             <IonTabButton className={`${styles['tabbutton']}`} key={`tab_${barIndex}`} tab={tab.name} href={tab.url}>
-                                <IonIcon color="dark" icon={active ? tab.activeIcon : tab.icon} />
+                                <IonIcon className="text-gray-900" icon={active ? tab.activeIcon : tab.icon} />
                             </IonTabButton>
                         );
                     })}

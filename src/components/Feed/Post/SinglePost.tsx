@@ -2,26 +2,38 @@ import React, { useRef, useState } from 'react';
 import MoreOptions from '../MoreOptions';
 import { bookmarkOutline, chatbubbleEllipses, chatbubbleOutline, chatbubblesOutline, chevronBack, ellipseOutline, ellipsisHorizontal, ellipsisVertical, ellipsisVerticalCircle, ellipsisVerticalSharp, heart, heartOutline, optionsOutline, paperPlaneOutline, reload, sendOutline, shareOutline } from 'ionicons/icons';
 import styles from "./SinglePost.module.css"; // Import css modules stylesheet as styles
-import { IPost, startLoading, stopLoading } from '../../../features/post/postSlice';
+import { IPost, startLoading, stopLoading, updateLike } from '../../../features/post/postSlice';
 import Posts from '../Posts';
 import { render } from '@testing-library/react';
-import { useAppDispatch } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { useIonViewWillLeave, IonModal, IonHeader, IonToolbar, IonButton, IonIcon, IonTitle, IonContent, IonCard, IonRow, IonCol, IonItem, IonAvatar, IonLabel, IonCardContent, IonNote, IonFooter, IonThumbnail } from '@ionic/react';
+import { State } from 'ionicons/dist/types/stencil-public-runtime';
+import { useUpdatePostLikeMutation } from '../../../features/api/apiSlice';
+import { getToken } from '../../../utils/Common';
 
 
 
 function SinglePost(props: IPost) {
-    const [isLiked, setIsLiked] = useState(false);
     const [viewMoreDetails, setViewMoreDetails] = useState(false);
     const postLikeRef = useRef<HTMLDivElement>(null);
+    const [addPostLike, { isLoading,  }] = useUpdatePostLikeMutation();
+    const canSave = [props.PostId, getToken()].every(Boolean) && !isLoading
+
     //implement a check to see if user owns the post...
-
-    const AddPostToLikes = (e: React.MouseEvent<HTMLIonIconElement, MouseEvent> | React.MouseEvent<HTMLIonButtonElement, MouseEvent>, feed: string, postID: string,) => {
+    const AddPostToLikes = async (e: React.MouseEvent<HTMLIonIconElement, MouseEvent> | React.MouseEvent<HTMLIonButtonElement, MouseEvent>, postID: number, isLiked: boolean) => {
         e.stopPropagation();
-        //add post like to backend...
-
-        setIsLiked(isLiked ? false : true);
+        if (canSave) {  
+            try {
+                await addPostLike({ postId: postID, isLiked: isLiked, token: getToken()}).unwrap();
+            } catch (err) {
+              console.error('Failed to like the post: ', err)
+            }
+            dispatch(updateLike(postID));            
+          }     
     }
+
+
+  
     const dispatch = useAppDispatch();
 
     useIonViewWillLeave(() => {
@@ -116,9 +128,9 @@ function SinglePost(props: IPost) {
                                     <IonButton fill="clear" color="medium">
                                         <IonIcon icon={chatbubblesOutline} />
                                     </IonButton>
-                                    <IonButton fill="clear" color={isLiked ? "danger" : "medium"} onClick={(e) => AddPostToLikes(e, "public", "4")}>
-                                        <IonIcon icon={isLiked ? heart : heartOutline} />
-                                        {isLiked ? <IonIcon color="danger" style={{ position: "absolute", display: `${isLiked ? "" : "none"}` }} className="animate__animated animate__fadeOutTopRight" icon={heart} /> : null}
+                                    <IonButton fill="clear" color={props.IsLiked ? "danger" : "medium"} onClick={(e) => AddPostToLikes(e, props.PostId, props.IsLiked)}>
+                                        <IonIcon icon={props.IsLiked ? heart : heartOutline} />
+                                        {props.IsLiked ? <IonIcon color="danger" style={{ position: "absolute", display: `${props.IsLiked ? "" : "none"}` }} className="animate__animated animate__fadeOutTopRight" icon={heart} /> : null}
                                     </IonButton>
                                 </div>
                             </IonRow>
@@ -132,46 +144,46 @@ function SinglePost(props: IPost) {
     const renderCard = () => {
         return (
             <div className="flex flex-col cursor-default ios ion-activatable hover:cursor-pointer active:cursor-default active:bg-gray-100 " onClick={() => (setViewMoreDetails(true))}>
-                <div className="sticky top-0 z-40 flex items-center text-sm font-semibold text-gray-900 snap-start bg-gray-50/5 backdrop-blur-sm ring-1 ring-gray-400/10">
+                <div className="sticky top-0 z-40 flex items-center text-sm font-semibold text-gray-900 snap-start bg-gray-50/5 backdrop-blur-sm ring-1 ring-gray-50">
                     <IonHeader>
                         <IonItem lines="none">
-                            <IonThumbnail slot="start" className="w-12 h-12">
-                            <img className="w-12 h-12 rounded-full shrink-0" src="https://via.placeholder.com/150" alt="" />
-                                                            </IonThumbnail>
-                            <IonLabel color="dark">
+                            <IonThumbnail slot="start">
+                                <img className="my-auto rounded-full shrink-0" src="https://via.placeholder.com/150" alt="" />
+                            </IonThumbnail>
+                            <IonLabel color="dark" >
                                 <span className="font-bold text-gray-800">{props.PostedBy}</span>
-                                <div><span className="text-xs text-gray-300">{props.PostedOn} • 4h ago</span></div>
+                                <div><span className="text-xs text-gray-900/50 font-regular">{props.PostedOn} • 4h ago</span></div>
                             </IonLabel>
-                            <div className="text-black ">
+                            <div className="text-black" slot="end" >
                                 <MoreOptions isOwner={false} />
                             </div>
                         </IonItem>
                     </IonHeader>
                 </div>
-                <IonCardContent className="sticky inset-0 z-30 px-4 py-3 text-gray-900 snap-start bg-gray-50/10 backdrop-blur-sm ring-1 ring-gray-300/10">
-                    <div className="ml-2 mr-2">
-                        <div className=" ion-padding-bottom">{trimText(`${props.PostBody}`)}</div>
-                        <IonRow className="justify-end ion-padding-top">
+                <IonCardContent className="sticky inset-0 z-30 text-gray-900 snap-start bg-gray-50/10 backdrop-blur-sm ring-1 ring-gray-50">
+                    <div className="">
+                        <div  slot="end" className=" ion-padding-bottom">{trimText(`${props.PostBody}`)}</div>
+                        <IonRow className="ion-padding-top">
                             <IonNote className="text-xs text-gray-400 transition text-light hover:text-gray-500">School '22, Studying Engineering 💻</IonNote>
                         </IonRow>
                     </div>
                 </IonCardContent>
-                <div className="sticky bottom-0 z-20 flex items-center text-sm font-semibold text-gray-900 ">
+                <div className="sticky bottom-0 z-20 flex items-center text-sm font-semibold text-gray-900 transition">
                     <IonFooter>
-                        <IonItem className={`${styles['IonItemColor']}`} lines="none">
-                            <IonButton fill="clear" color={isLiked ? "danger" : "medium"} onClick={(e) => AddPostToLikes(e, "public", "4")}>
-                                <IonIcon icon={isLiked ? heart : heartOutline} />
-                                {isLiked ? <IonIcon color="danger" style={{ position: "absolute", display: `${isLiked ? "" : "none"}` }} className="animate__animated animate__fadeOutTopRight" icon={heart} /> : null}
-                            </IonButton>
-                            <IonButton fill="clear" color="medium">
+                        <IonItem className={`${styles['IonItemColor']}`} lines="none" >
+                            <IonButton fill="clear" slot="start" color="medium">
                                 <IonIcon icon={bookmarkOutline} />
                             </IonButton>
-                            <IonButton fill="clear" color="medium">
+                            <IonButton fill="clear" slot="end" color={props.IsLiked ? "danger" : "medium"} onClick={(e) => AddPostToLikes(e, props.PostId, props.IsLiked)}>
+                                <IonIcon icon={props.IsLiked ? heart : heartOutline} />
+                                {props.IsLiked ? <IonIcon color="danger" style={{ position: "absolute", display: `${props.IsLiked ? "" : "none"}` }} className="animate__animated animate__fadeOutTopRight" icon={heart} /> : null}
+                                <span className={props.IsLiked ? "ml-1 font-black" : "ml-1"}>{props.Likes}</span>                            
+                            </IonButton>
+                            <IonButton fill="clear" slot="end" className="" color="medium">
                                 <IonIcon icon={chatbubblesOutline} />
+                                <span className="ml-1">0</span>
                             </IonButton>
-                            <IonButton fill="clear" slot="end" color="medium">
-                                <IonIcon icon={paperPlaneOutline} />
-                            </IonButton>
+
                         </IonItem>
                     </IonFooter>
                 </div>
@@ -215,9 +227,9 @@ function SinglePost(props: IPost) {
                     <IonFooter>
                         <div >
                             <IonItem className={`${styles['IonItemColor']}`}>
-                                <IonButton fill="clear" color={isLiked ? "danger" : "medium"} onClick={(e) => AddPostToLikes(e, "public", "4")}>
-                                    <IonIcon icon={isLiked ? heart : heartOutline} />
-                                    {isLiked ? <IonIcon color="danger" style={{ position: "absolute", display: `${isLiked ? "" : "none"}` }} className="animate__animated animate__fadeOutTopRight" icon={heart} /> : null}
+                                <IonButton fill="clear" color={props.IsLiked ? "danger" : "medium"} onClick={(e) => AddPostToLikes(e, props.PostId, props.IsLiked)}>
+                                    <IonIcon icon={props.IsLiked ? heart : heartOutline} />
+                                    {props.IsLiked ? <IonIcon color="danger" style={{ position: "absolute", display: `${props.IsLiked ? "" : "none"}` }} className="animate__animated animate__fadeOutTopRight" icon={heart} /> : null}
                                 </IonButton>
                                 <IonButton fill="clear" color="medium">
                                     <IonIcon icon={bookmarkOutline} />
@@ -253,7 +265,7 @@ function SinglePost(props: IPost) {
                     </div>
                 </IonItem>
                 <IonItem class={`${styles.IonItemColor}`}>
-                <IonThumbnail slot="start" className="w-8 h-8">
+                    <IonThumbnail slot="start" className="w-8 h-8">
                     </IonThumbnail>
                     <IonLabel color="dark">
                         post content
@@ -261,9 +273,9 @@ function SinglePost(props: IPost) {
                             <IonNote className="text-xs text-gray-400 transition text-light hover:text-gray-500">School '22, Studying Engineering 💻</IonNote>
                         </IonRow>
                         <IonRow className="flex-row-reverse justify-around mt-6 ">
-                            <IonButton fill="clear" color={isLiked ? "danger" : "medium"} onClick={(e) => AddPostToLikes(e, "public", "4")}>
-                                <IonIcon icon={isLiked ? heart : heartOutline} />
-                                {isLiked ? <IonIcon color="danger" style={{ position: "absolute", display: `${isLiked ? "" : "none"}` }} className="animate__animated animate__fadeOutTopRight" icon={heart} /> : null}
+                            <IonButton fill="clear" color={props.IsLiked ? "danger" : "medium"} onClick={(e) => AddPostToLikes(e, props.PostId, props.IsLiked)}>
+                                <IonIcon icon={props.IsLiked ? heart : heartOutline} />
+                                {props.IsLiked ? <IonIcon color="danger" style={{ position: "absolute", display: `${props.IsLiked ? "" : "none"}` }} className="animate__animated animate__fadeOutTopRight" icon={heart} /> : null}
                             </IonButton>
                             <IonButton fill="clear" color="medium">
                                 <IonIcon icon={bookmarkOutline} />
@@ -308,9 +320,9 @@ function SinglePost(props: IPost) {
                     </IonRow>
                 </div>
                 <IonItem className={`${styles['IonItemColor']}`}>
-                    <IonButton fill="clear" color={isLiked ? "danger" : "medium"} onClick={(e) => AddPostToLikes(e, "public", "4")}>
-                        <IonIcon icon={isLiked ? heart : heartOutline} />
-                        {isLiked ? <IonIcon color="danger" style={{ position: "absolute", display: `${isLiked ? "" : "none"}` }} className="animate__animated animate__fadeOutTopRight" icon={heart} /> : null}
+                    <IonButton fill="clear" color={props.IsLiked ? "danger" : "medium"} onClick={(e) => AddPostToLikes(e, props.PostId, props.IsLiked)}>
+                        <IonIcon icon={props.IsLiked ? heart : heartOutline} />
+                        {props.IsLiked ? <IonIcon color="danger" style={{ position: "absolute", display: `${props.IsLiked ? "" : "none"}` }} className="animate__animated animate__fadeOutTopRight" icon={heart} /> : null}
                     </IonButton>
                     <IonButton fill="clear" color="medium">
                         <IonIcon icon={bookmarkOutline} />

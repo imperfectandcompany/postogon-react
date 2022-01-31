@@ -1,10 +1,11 @@
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonMenuToggle, IonButtons, IonFooter, IonCol, IonRow, IonSpinner, IonItem, IonList, IonListHeader, useIonPopover, IonCard, IonCardContent, IonLabel, IonSegment, IonSegmentButton, IonTextarea, IonBackButton, IonRedirect, NavContext, useIonViewWillEnter } from '@ionic/react';
 import { chevronBack, searchOutline } from 'ionicons/icons';
 import { useCallback, useContext, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import Posts from '../../components/Feed/Posts';
 import { useAddNewPostMutation } from '../../features/api/apiSlice';
-import { fetchPostsFeed, fetchPostsType } from '../../features/post/postSlice';
+import { changeFeed, fetchPostsFeed, fetchPostsType } from '../../features/post/postSlice';
 import { getToken } from '../../utils/Common';
 import { hideTabs } from './LoggedIn';
 
@@ -32,11 +33,22 @@ const LoggedInCreatePost: React.FC = () => {
     [navigate]
   );
 
+  const dispatch = useDispatch();
+
   const onSavePostClicked = async (to_whom: number) => {
     if (canSave) {
       try {
-        await addNewPost({ body: currentValue, token: getToken(), to_whom: to_whom }).unwrap()
+        await addNewPost({ body: currentValue, token: getToken(), to_whom: to_whom }).unwrap();      
         setCurrentValue("");
+        switch(feed){
+          case "1": dispatch(changeFeed(fetchPostsFeed.PUBLIC));
+          break;
+          case "2": dispatch(changeFeed(fetchPostsFeed.PRIVATE));
+            break;
+          default:
+            break;
+        }
+        console.log("Fawew");
         redirect();
       } catch (err) {
         console.error('Failed to save the post: ', err)

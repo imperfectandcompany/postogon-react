@@ -1,27 +1,48 @@
-import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../app/store'
 import { getToken } from '../../utils/Common';
 import api from "../../utils/API";
+import axios from 'axios';
+import { useGetTimelineFeedQuery } from '../api/apiSlice';
+import { useAppSelector } from '../../app/hooks';
 
 
 
 // Define the Post type
 export interface IPost {
+  posts: [];
   PostId: number;
   PostBody: string;
+  IsLiked: boolean;
   PostedBy: string;
   PostedOn: number;
   Likes: number;
+  Comments: number;
 }
+
+
 
 export interface PostState {
   readonly posts: IPost[],
   readonly loadedPosts: IPost[],
   perPage: number,
   lastPosition: number,
-  liked: boolean,
+  feed: fetchPostsFeed,
   isLoading: boolean
-  error: boolean;
+  status: 'idle' | 'loading' | 'succeeded' | 'failed',
+  error: string | null | undefined
+}
+
+export enum fetchPostsType{
+  TIMELINE='TIMELINE',
+  PROFILE='PROFILE',
+  ID='ID'
+}
+
+export enum fetchPostsFeed {
+  PUBLIC = 'public',
+  PRIVATE = 'private',
+  result = "result"
 }
 
 // Define the initial state using that type
@@ -29,11 +50,17 @@ export const initialState: PostState = {
   posts: [],
   loadedPosts: [],
   lastPosition: 8,
+  feed: fetchPostsFeed.PUBLIC,
   perPage: 8,
-  liked: false,
   isLoading: true,
-  error: false
+  status: 'idle',
+  error: null
 }
+
+export const fetchPosts =  createAsyncThunk('posts/fetchPosts', async (feed:any) => {
+  const response = await axios.get(`https://api.postogon.com/posts/public?token=${getToken()}&feed=${feed}`)
+  return response.data
+})
 
 export const postSlice = createSlice({
   name: 'post',
@@ -55,17 +82,9 @@ export const postSlice = createSlice({
     stopLoading: state => {
       state.isLoading = false;
     },    
-    fetchSuccess: (state, action: PayloadAction<IPost[]>) => {
-      //initialize post position in case of refresh
-      state.lastPosition = state.perPage;
-      //all posts
-      state.posts = action.payload; 
-      //sort by earliest timestamp for chronological order!
-      state.posts = state.posts.sort((x, y) => y.PostedOn - x.PostedOn);
-      //get the first 8 posts
-      state.loadedPosts = state.posts.slice(0, state.perPage);
-      state.isLoading = false;
-    },
+    changeFeed: (state, action) => {
+      state.feed = action.payload;
+    },  
     loadPosts: state => {
       //take the previous value of loadedposts and add the last position by the next 8 (basically the next page) to get the next set of posts
       state.loadedPosts = [...state.loadedPosts, ...state.posts.slice(state.lastPosition, state.lastPosition + state.perPage)]
@@ -80,61 +99,55 @@ export const postSlice = createSlice({
       state.error = action.payload;
       state.isLoading = false;
     },
-    updateLike: (state, action: PayloadAction<boolean>) => {
-      state.liked = action.payload
+    updateLike: (state, action) => {
+      const postId  = action.payload;
+      const existingPost = state.loadedPosts.find(post => post.PostId === postId);
+      if (existingPost) {
+        existingPost.IsLiked ? existingPost.Likes-- : existingPost.Likes++;
+        existingPost.IsLiked= !existingPost.IsLiked;
+      }
     },
     getPosts: (state, action: PayloadAction<IPost>) => {
-      state.posts.push(action.payload)
+      state.posts.push(action.payload);
     },
+  },
+    extraReducers(builder) {
+    builder
+      .addCase(fetchPosts.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(fetchPosts.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        // Add any fetched posts to the array
+        console.log(action.payload);
+        console.log(state.posts);
+        state.posts = state.posts.concat(action.payload)
+      //initialize post position in case of refresh
+      state.lastPosition = state.perPage;
+      //all posts
+      state.posts = action.payload; 
+      //sort by earliest timestamp for chronological order!
+      state.posts = state.posts.sort((x, y) => y.PostedOn - x.PostedOn);
+      //get the first 8 posts
+      state.loadedPosts = state.posts.slice(0, state.perPage);
+      state.isLoading = false;        
+      })
+      .addCase(fetchPosts.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
   }
 })
 
 
-export enum fetchPostsType{
-  TIMELINE='TIMELINE',
-  PROFILE='PROFILE',
-  ID='ID'
-}
 
-
-export enum fetchPostsFeed {
-  PUBLIC = 'public',
-  PRIVATE = 'private',
-  result = "result"
-}
 
 // Action creators are generated for each case reducer function
-export const { updateLike, loadPosts, fetchSuccess, updatePosition, startLoading, stopLoading, hasError } = postSlice.actions
-// Other code such as selectors can use the imported `RootState` type
-export const selectIsLiked = (state: RootState) => state.post.liked
+export const { updateLike, loadPosts, changeFeed, updatePosition, startLoading, stopLoading, hasError } = postSlice.actions
+
 export default postSlice.reducer
 
-//thunk to  handle side effects, if userSuccess goes through then it will return a new object in the reducer
-export const fetchPosts = (type:fetchPostsType, feed?:string, id?:number, username?:string) => async (dispatch:Dispatch) => {
-  const token = getToken();
-  dispatch(startLoading());
-  try {
-    switch(type){
-      case fetchPostsType.TIMELINE:
-        await api.get(`/posts/public?token=${token}&feed=${feed}`)
-        .then((response: { data: IPost[]; }) => dispatch(fetchSuccess(response.data)))
-        break;
-      case fetchPostsType.PROFILE:
-        await api.get(`/profile?username=${username}&feed=${feed}`)
-        .then((response: { data: IPost[]; }) => dispatch(fetchSuccess(response.data)))
-        break;
-      case fetchPostsType.ID:
-        await api.get(`/posts?id=${id}`)
-        .then((response: { data: IPost[]; }) => dispatch(fetchSuccess(response.data)))
-        break;        
-    }
-  } catch (err) {
-    dispatch(hasError(err))
-  }
-}
-
-
-
+export const selectAllPosts = (state: RootState) => state.post.posts;
 
 
 /*action is just a javascript object

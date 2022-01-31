@@ -3,12 +3,14 @@ import { profile } from 'console';
 import { addCircle, addCircleOutline, addCircleSharp, addOutline, bookmarkOutline, chatbubblesOutline, chevronDown, heart, heartOutline, paperPlaneOutline, pulseOutline, searchOutline } from 'ionicons/icons';
 import React from 'react';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
+import { useAppSelector } from '../../app/hooks';
 import MoreOptions from '../../components/Feed/MoreOptions';
 import Posts from '../../components/Feed/Posts';
 import Loading from '../../components/Loading/Loading';
 import CreatePost from '../../components/Timeline/CreatePost';
-import { fetchPostsFeed, fetchPostsType } from '../../features/post/postSlice';
+import { changeFeed, fetchPosts, fetchPostsFeed, fetchPostsType, selectAllPosts } from '../../features/post/postSlice';
 import { addPaddingToContent, showTabs } from './LoggedIn';
 
 interface UserDetailPageProps
@@ -22,11 +24,19 @@ const LoggedInTimeline: React.FC<UserDetailPageProps> = ({ match }) => {
   useIonViewWillEnter(() => showTabs());
   useIonViewWillEnter(() => addPaddingToContent());
 
+  const feed = useAppSelector(state => state.post.feed);
   
-  const [feed, setFeed] = useState(fetchPostsFeed.PUBLIC);
+
   const logoColor = {
     filter: 'brightness(0.1)',
   };
+
+  const dispatch = useDispatch();
+
+
+  const setFeed = (feed: fetchPostsFeed) => {
+    dispatch(changeFeed(feed));
+  }
 
   const contentRef = useRef<HTMLIonContentElement | null>(null);
   const scrollToTop = () => {
@@ -48,7 +58,7 @@ const LoggedInTimeline: React.FC<UserDetailPageProps> = ({ match }) => {
 
   return (
     <>
-      <IonPage id="main-content" className="overflow-visible bg-white" color="white">
+      <IonPage id="main-content" className="bg-white" color="white">
         <IonHeader translucent={true}>
           <IonToolbar class="ion-no-border" color="transparent" >
             <IonButtons slot="start">

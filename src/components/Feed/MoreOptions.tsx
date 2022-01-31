@@ -27,7 +27,7 @@ function MoreOptions(props:MoreOptionsProps) {
           className="overflow-hidden focus:outline-none"
           onClick={(e) => returnOptions(e)}
         >
-        <IonIcon icon={ellipsisVertical} size="small" className="text-gray-900/75" ></IonIcon>
+        <IonIcon icon={ellipsisHorizontal} size="small" className="text-gray-900/75" ></IonIcon>
             </IonButton>
             <IonActionSheet
             translucent={true}
