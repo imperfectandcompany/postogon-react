@@ -118,9 +118,6 @@ export const postSlice = createSlice({
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = 'succeeded'
-        // Add any fetched posts to the array
-        console.log(action.payload);
-        console.log(state.posts);
         state.posts = state.posts.concat(action.payload)
       //initialize post position in case of refresh
       state.lastPosition = state.perPage;

@@ -1,7 +1,7 @@
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, useIonToast } from '@ionic/react';
+import { IonAlert, IonApp, IonRouterOutlet, useIonToast } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-
+import { alertController } from '@ionic/core';
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
 
@@ -25,7 +25,7 @@ import 'animate.css';
 /* Theme variables */
 import './theme/variables.css';
 import './theme/tailwind.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getToken } from './utils/Common';
 import LoggedIn from './pages/LoggedIn/LoggedIn';
 import NotLoggedIn from './pages/NotLoggedIn/NotLoggedIn';
@@ -39,6 +39,10 @@ setupIonicReact({
 
 
 function App() {
+  //utilize ref object to hold a reference to the callback that will be used in the alert
+  const [leaveConfirmMessage, setLeaveConfirmMessage] = useState<string>();
+  const confirmCallback = useRef<(ok: boolean) => void>();
+
   const [authLoading, setAuthLoading] = useState(true);
   const { authValues } = React.useContext(AuthContext);
   const toggleDarkModeHandler = () => {
@@ -71,7 +75,12 @@ function App() {
 
   return (
     <IonApp>
-      <IonReactRouter>
+      <IonReactRouter
+        getUserConfirmation={(message, callback) => {
+          setLeaveConfirmMessage(message);
+          confirmCallback.current = callback;
+        }}
+      >
         <Route
           path="/"
           render={(props) => {
@@ -79,6 +88,25 @@ function App() {
           }}
         />
         <Route render={() => <Redirect to="/" />} />
+        <IonAlert
+          isOpen={!!leaveConfirmMessage}
+          message={leaveConfirmMessage}
+          buttons={[
+            {
+              text: "No",
+              handler: () => {
+                confirmCallback.current && confirmCallback.current(false);
+              },
+            },
+            {
+              text: "Yes",
+              handler: () => {
+                confirmCallback.current && confirmCallback.current(true);
+              },
+            },
+          ]}
+          onDidDismiss={() => setLeaveConfirmMessage(undefined)}
+        />
       </IonReactRouter>
     </IonApp>
   );

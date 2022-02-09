@@ -30,9 +30,9 @@ export function addPaddingToContent() {
     setTimeout(() => {
         const container = document.querySelector('ion-content');
         if (container) {
-             container.style.setProperty('--padding-bottom', '44px');
+            container.style.setProperty('--padding-bottom', '44px');
         }
-        });
+    });
 }
 
 
@@ -49,7 +49,7 @@ const LoggedIn: React.FC<RouteComponentProps> = ({ match }) => {
             component: LoggedInTimeline,
             children:
             {
-                
+
             },
         },
         {
@@ -80,6 +80,7 @@ const LoggedIn: React.FC<RouteComponentProps> = ({ match }) => {
 
 
 
+
     return (
         <>
             <IonTabs onIonTabsDidChange={e => setActiveTab(e.detail.tab)}>
@@ -95,7 +96,7 @@ const LoggedIn: React.FC<RouteComponentProps> = ({ match }) => {
                     </Route>
                     <Redirect exact from="/" to="/home" />
                 </IonRouterOutlet>
-                <IonTabBar slot="bottom" className={`${styles['transparent']}`} class="ion-no-border"  translucent={true} >
+                <IonTabBar slot="bottom" className={`${styles['transparent']}`} class="ion-no-border" translucent={true} >
                     {tabs.map((tab, barIndex) => {
                         const active = tab.name === activeTab;
                         return (

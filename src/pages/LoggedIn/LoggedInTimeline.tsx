@@ -1,4 +1,4 @@
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonMenuToggle, IonButtons, IonSearchbar, NavContext, useIonViewWillEnter, useIonViewWillLeave, IonSegment, IonSegmentButton, IonAvatar, IonItem, IonCard, IonCardContent, IonCol, IonRow, IonNote, IonSplitPane, IonProgressBar, ScrollDetail, IonLabel, IonList } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonMenuToggle, IonButtons, IonSearchbar, NavContext, useIonViewWillEnter, useIonViewWillLeave, IonSegment, IonSegmentButton, IonAvatar, IonItem, IonCard, IonCardContent, IonCol, IonRow, IonNote, IonSplitPane, IonProgressBar, ScrollDetail, IonLabel, IonList, GestureDetail, ScrollBaseDetail } from '@ionic/react';
 import { profile } from 'console';
 import { addCircle, addCircleOutline, addCircleSharp, addOutline, bookmarkOutline, chatbubblesOutline, chevronDown, heart, heartOutline, paperPlaneOutline, pulseOutline, searchOutline } from 'ionicons/icons';
 import React from 'react';
@@ -18,6 +18,9 @@ interface UserDetailPageProps
     id: fetchPostsFeed;
   }> {}
 
+
+
+
 const LoggedInTimeline: React.FC<UserDetailPageProps> = ({ match }) => {
 
   
@@ -26,7 +29,6 @@ const LoggedInTimeline: React.FC<UserDetailPageProps> = ({ match }) => {
 
   const feed = useAppSelector(state => state.post.feed);
   
-
   const logoColor = {
     filter: 'brightness(0.1)',
   };
